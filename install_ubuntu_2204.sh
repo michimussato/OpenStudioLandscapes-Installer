@@ -30,7 +30,7 @@ echo ""
 echo "Copy/Paste above Public Key to GitHub: https://github.com/settings/ssh/new"
 
 while [[ "$choice_ssh" != [Yy]* ]]; do
-    read -r -e -p "Type [Yy]es when ready..." choice_ssh
+    read -r -e -p "Type [Yy]es when ready... " choice_ssh
 done
 
 ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -167,7 +167,7 @@ nox -s install_features_into_engine
 
 deactivate
 
-read -r -e -p "Do you want me to add entries to /etc/hosts?" choice_hosts
+read -r -e -p "Do you want me to add entries to /etc/hosts? " choice_hosts
 [[ "$choice_hosts" == [Yy]* ]] \
     && sudo sed -i -e '$a127.0.0.1    dagster.farm.evil' -e '/127.0.0.1    dagster.farm.evil/d' /etc/hosts \
     && sudo sed -i -e '$a127.0.0.1    postgres-dagster.farm.evil' -e '/127.0.0.1    postgres-dagster.farm.evil/d' /etc/hosts \
@@ -185,15 +185,16 @@ echo "Your /etc/docker/daemon.json file looks like:"
 sudo cat /etc/docker/daemon.json
 echo ""
 
-read -r -e -p "Initialize Harbor?" choice_harbor
+read -r -e -p "Initialize Harbor? " choice_harbor
 [[ "$choice_harbor" == [Yy]* ]] \
-    && su -l "${USER}" -c "cd ~/git/repos/OpenStudioLandscapes && source .venv/bin/activate && nox --session harbor_prepare && deactivate" \
+    && read -s -p "Password for sudo user ${USER}: " password \
+    && echo "${password}" | su -S -l "${USER}" -c "cd ~/git/repos/OpenStudioLandscapes && source .venv/bin/activate && nox --session harbor_prepare && deactivate" \
 || echo "Ok, you'll do it yourself."
 
 echo "Reboot system please."
 echo "Remember to create project 'openstudiolandscapes' in Harbor afterwards."
 
-read -r -e -p "Reboot now?" choice_reboot
+read -r -e -p "Reboot now? " choice_reboot
 [[ "$choice_reboot" == [Yy]* ]] \
     && sudo systemctl reboot \
 || echo "Ok, let's reboot later."
