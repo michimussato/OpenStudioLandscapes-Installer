@@ -34,17 +34,17 @@ def script_prep_write() -> pathlib.Path:
     ) as script_1:
         script_1.writelines(
             [
-                "#!/bin/env bash",
-                "",
-                "",
-                "sudo apt-get update",
-                "sudo apt-get upgrade -y",
-                "",
-                "sudo apt-get install -y openssh-server git htop vim",
-                "sudo apt-get -y autoremove",
-                "sudo apt-get clean",
-                "",
-                "sudo systemctl enable --now ssh",
+                "#!/bin/env bash\n",
+                "\n",
+                "\n",
+                "sudo apt-get update\n",
+                "sudo apt-get upgrade -y\n",
+                "\n",
+                "sudo apt-get install -y openssh-server git htop vim\n",
+                "sudo apt-get -y autoremove\n",
+                "sudo apt-get clean\n",
+                "\n",
+                "sudo systemctl enable --now ssh\n",
             ]
         )
 
@@ -88,6 +88,7 @@ def script_prep_run(
 
 if __name__ == "__main__":
     script = script_prep_write()
+    script_prep_run(sudo=True, script_prep=script)
     print(script)
 
 #
