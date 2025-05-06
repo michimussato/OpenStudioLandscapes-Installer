@@ -2,7 +2,8 @@
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
 
 # Run this with:
-# curl -s https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.sh | bash -s arg1 arg2
+# sudo apt-get install -y curl
+# curl https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.sh | bash  # -s -- arg1 arg2
 
 # Prep
 sudo apt-get update
