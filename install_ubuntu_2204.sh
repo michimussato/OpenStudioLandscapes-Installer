@@ -150,7 +150,7 @@ sudo groupadd --force docker
 sudo usermod --append --groups docker "${USER}"
 
 # This is to prevent the need to logout/login
-su - "${USER}"
+# exec su -l "${USER}"
 
 sudo systemctl daemon-reload
 sudo systemctl restart docker
@@ -187,10 +187,7 @@ echo ""
 
 read -r -e -p "Initialize Harbor?" choice_harbor
 [[ "$choice_harbor" == [Yy]* ]] \
-    && cd ~/git/repos/OpenStudioLandscapes \
-    && source .venv/bin/activate \
-    && nox --session harbor_prepare \
-    && deactivate \
+    && su -l "${USER}" -c "cd ~/git/repos/OpenStudioLandscapes && source .venv/bin/activate && nox --session harbor_prepare && deactivate" \
 || echo "Ok, you'll do it yourself."
 
 echo "Reboot system please."
