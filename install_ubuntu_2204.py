@@ -54,7 +54,7 @@ def script_run(
     sudo: bool = False,
     *,
     script: pathlib.Path,
-) -> subprocess.CompletedProcess:
+) -> tuple[bytes, bytes]:
 
     cmd = [
         shutil.which("bash"),
@@ -73,13 +73,15 @@ def script_run(
         # env=os.environ,
     )
 
-    return proc
+    if proc.returncode:
+        raise RuntimeError(proc)
+
+    return proc.stdout, proc.stderr
 
 
 if __name__ == "__main__":
     script = script_prep_write()
     ret = script_run(sudo=True, script=script)
-    print(ret)
 
 #
 # with tempfile.TemporaryFile("script_2.sh", "w") as script_2:
