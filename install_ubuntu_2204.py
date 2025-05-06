@@ -24,7 +24,7 @@ def sudo_pass():
     return _sudo_pass
 
 
-def script_prep_write() -> _TemporaryFileWrapper[str] | None:
+def script_prep_write() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
         delete=False,
         encoding="utf-8",
@@ -48,13 +48,13 @@ def script_prep_write() -> _TemporaryFileWrapper[str] | None:
             ]
         )
 
-        return script_1
+        return pathlib.Path(script_1.name)
 
 
 def script_prep_run(
     sudo: bool = False,
     *,
-    script_prep: _TemporaryFileWrapper[str] | None,
+    script_prep: pathlib.Path,
 ) -> None:
 
     cmd = [
@@ -85,6 +85,10 @@ def script_prep_run(
     print(stdout)
     print(stderr)
 
+
+if __name__ == "__main__":
+    script = script_prep_write()
+    print(script)
 
 #
 # with tempfile.TemporaryFile("script_2.sh", "w") as script_2:
