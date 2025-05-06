@@ -186,9 +186,19 @@
 #echo ""
 
 read -r -e -p "Initialize Harbor? " choice_harbor
+# Todo
+#  - [ ] password required when sudo as USER?
 [[ "$choice_harbor" == [Yy]* ]] \
     && read -r -s -p "Password for sudo user ${USER}: " password \
     && echo "${password}" | sudo -S -u ${USER} -- bash -c "cd ~/git/repos/OpenStudioLandscapes && source .venv/bin/activate && nox --session harbor_prepare && deactivate" \
+|| echo "Ok, you'll do it yourself."
+
+read -r -e -p "Initialize Pi-Hole? " choice_pihole
+[[ "$choice_pihole" == [Yy]* ]] \
+    && cd ~/git/repos/OpenStudioLandscapes \
+    && source .venv/bin/activate \
+    && nox --session pi_hole_prepare \
+    && deactivate \
 || echo "Ok, you'll do it yourself."
 
 echo "Reboot system please."
