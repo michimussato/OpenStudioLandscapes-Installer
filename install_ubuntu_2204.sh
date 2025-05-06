@@ -188,7 +188,7 @@
 read -r -e -p "Initialize Harbor? " choice_harbor
 [[ "$choice_harbor" == [Yy]* ]] \
     && read -r -s -p "Password for sudo user ${USER}: " password \
-    && echo "${password}" | sudo -S "cd ~/git/repos/OpenStudioLandscapes && source .venv/bin/activate && nox --session harbor_prepare && deactivate" \
+    && echo "${password}" | sudo -S -- bash -c "cd ~/git/repos/OpenStudioLandscapes && source .venv/bin/activate && nox --session harbor_prepare && deactivate" \
 || echo "Ok, you'll do it yourself."
 
 echo "Reboot system please."
