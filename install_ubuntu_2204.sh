@@ -2,6 +2,41 @@
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
 
 
+# Prep
+sudo apt-get update
+sudo apt-get upgrade -y
+# apt-get upgrade
+
+sudo apt-get install -y openssh-server git htop vim
+sudo apt-get -y autoremove
+sudo apt-get clean
+
+sudo systemctl enable --now ssh
+
+# Required while not public
+# 1. https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+read -r -e -p "Type your email: " email
+ssh-keygen -f ~/.ssh/id_ed25519 -N '' -t ed25519 -C "${email}"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+# 2. https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+# 3. https://github.com/settings/keys
+cat ~/.ssh/id_ed25519.pub
+echo "Add above Public Key to GitHub: https://github.com/settings/ssh/new" choice
+
+while [[ "$choice" != [Yy]* ]]; do
+    read -r -e -p "Type [Yy]es when ready..." choice
+done
+
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+mkdir -p ~/git/repos/OpenStudioLandscapes
+git -C ~/git/repos clone git@github.com:michimussato/OpenStudioLandscapes.git
+cd ~/git/repos/OpenStudioLandscapes || exit
+
+
+# Install OpenStudioLandscapes
+
 # https://itsfoss.com/could-not-get-lock-error/
 # stat /var/lib/dpkg/lock
 # stat /var/lib/dpkg/lock-frontend
