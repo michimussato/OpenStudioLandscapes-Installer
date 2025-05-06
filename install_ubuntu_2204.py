@@ -21,16 +21,16 @@ from getpass import getpass
 
 def sudo_pass():
     _sudo_pass = getpass(prompt='Sudo Password: ')
-    return _sudo_pass
+    return _sudo_pass.encode()
 
 
 def script_prep_write() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
-        delete=False,
-        encoding="utf-8",
-        prefix="ubuntu_2204_",
-        suffix=".sh",
-        mode="x",
+            delete=False,
+            encoding="utf-8",
+            prefix="ubuntu_2204_",
+            suffix=".sh",
+            mode="x",
     ) as script_1:
         script_1.writelines(
             [
@@ -51,51 +51,44 @@ def script_prep_write() -> pathlib.Path:
         return pathlib.Path(script_1.name)
 
 
-def script_prep_run(
-    sudo: bool = False,
-    *,
-    script_prep: pathlib.Path,
+def script_run(
+        sudo: bool = False,
+        *,
+        script: pathlib.Path,
 ) -> None:
-
     cmd = [
         shutil.which("bash"),
-        script_prep.name,
+        script.as_posix(),
     ]
-    if sudo:
-        _sudo_pass = sudo_pass()
-        cmd.insert(0, shutil.which("sudo"))
 
-    stdout, stderr = subprocess.run(
-    # proc_1 = subprocess.Popen(
-    # subprocess.call(
+    if sudo:
+        cmd.insert(0, shutil.which("sudo"))
+        cmd.insert(1, "--stdin")
+
+    proc = subprocess.run(
         cmd,
-        input=None if not sudo else _sudo_pass.encode("utf-8"),
-        shell=True,
-        capture_output=True,
-        # stdout=subprocess.PIPE,
-        # stderr=subprocess.PIPE,
-        # stdin=subprocess.PIPE,
-        # universal_newlines=True,
+        input=None if not sudo else sudo_pass(),
+        check=True,
         # cwd=script_prep.parent.as_posix(),
         # env=os.environ,
     )
 
-    stdout = stdout.decode("utf-8")
-    stderr = stderr.decode("utf-8")
+    # stdout = stdout.decode("utf-8")
+    # stderr = stderr.decode("utf-8")
 
-    print(stdout)
-    print(stderr)
+    print(proc)
+    # print(stderr)
+    return proc.returncode
 
 
 if __name__ == "__main__":
     script = script_prep_write()
-    script_prep_run(sudo=True, script_prep=script)
-    print(script)
+    script_run(sudo=True, script=script)
+    # print(script)
 
 #
 # with tempfile.TemporaryFile("script_2.sh", "w") as script_2:
 #     pass
-
 
 
 # sudo systemctl enable --now ssh
