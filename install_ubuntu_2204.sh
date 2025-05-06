@@ -5,6 +5,10 @@
 # sudo apt-get install -y curl
 # bash <(curl https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.sh)
 
+# This works, but is not very nicely structured
+# Maybe split into multiple scripts?
+# Write in Python?
+
 # Prep
 sudo apt-get update
 sudo apt-get upgrade -y
