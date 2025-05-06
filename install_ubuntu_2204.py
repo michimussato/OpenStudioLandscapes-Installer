@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
-import os
 import shutil
 import subprocess
 import tempfile
 import pathlib
-from tempfile import _TemporaryFileWrapper
 from getpass import getpass
 
 
@@ -19,7 +17,8 @@ from getpass import getpass
 
 # Prep
 
-def sudo_pass():
+
+def sudo_pass() -> bytes:
     _sudo_pass = getpass(prompt='Sudo Password: ')
     return _sudo_pass.encode()
 
@@ -52,10 +51,11 @@ def script_prep_write() -> pathlib.Path:
 
 
 def script_run(
-        sudo: bool = False,
-        *,
-        script: pathlib.Path,
-) -> None:
+    sudo: bool = False,
+    *,
+    script: pathlib.Path,
+) -> subprocess.CompletedProcess:
+
     cmd = [
         shutil.which("bash"),
         script.as_posix(),
@@ -73,18 +73,13 @@ def script_run(
         # env=os.environ,
     )
 
-    # stdout = stdout.decode("utf-8")
-    # stderr = stderr.decode("utf-8")
-
-    print(proc)
-    # print(stderr)
-    return proc.returncode
+    return proc
 
 
 if __name__ == "__main__":
     script = script_prep_write()
-    script_run(sudo=True, script=script)
-    # print(script)
+    ret = script_run(sudo=True, script=script)
+    print(ret)
 
 #
 # with tempfile.TemporaryFile("script_2.sh", "w") as script_2:
