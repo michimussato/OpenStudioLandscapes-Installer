@@ -62,13 +62,14 @@ def script_prep_run(
         script_prep.name,
     ]
     if sudo:
+        _sudo_pass = sudo_pass()
         cmd.insert(0, shutil.which("sudo"))
 
     stdout, stderr = subprocess.run(
     # proc_1 = subprocess.Popen(
     # subprocess.call(
         cmd,
-        input=sudo_pass().encode("utf-8"),
+        input=None if not sudo else _sudo_pass.encode("utf-8"),
         shell=True,
         capture_output=True,
         # stdout=subprocess.PIPE,
