@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
 
+# Run this with:
+# curl -s https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.sh | bash -s arg1 arg2
 
 # Prep
 sudo apt-get update
@@ -22,10 +24,10 @@ ssh-add ~/.ssh/id_ed25519
 # 2. https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
 # 3. https://github.com/settings/keys
 cat ~/.ssh/id_ed25519.pub
-echo "Add above Public Key to GitHub: https://github.com/settings/ssh/new" choice
+echo "Add above Public Key to GitHub: https://github.com/settings/ssh/new"
 
-while [[ "$choice" != [Yy]* ]]; do
-    read -r -e -p "Type [Yy]es when ready..." choice
+while [[ "$choice_ssh" != [Yy]* ]]; do
+    read -r -e -p "Type [Yy]es when ready..." choice_ssh
 done
 
 ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -159,8 +161,8 @@ nox -s install_features_into_engine
 
 deactivate
 
-read -r -e -p "Do you want me to add entries to /etc/hosts?" choice
-[[ "$choice" == [Yy]* ]] \
+read -r -e -p "Do you want me to add entries to /etc/hosts?" choice_hosts
+[[ "$choice_hosts" == [Yy]* ]] \
     && sudo sed -i -e '$a127.0.0.1    dagster.farm.evil' -e '/127.0.0.1    dagster.farm.evil/d' /etc/hosts \
     && sudo sed -i -e '$a127.0.0.1    postgres-dagster.farm.evil' -e '/127.0.0.1    postgres-dagster.farm.evil/d' /etc/hosts \
     && sudo sed -i -e '$a127.0.0.1    harbor.farm.evil' -e '/127.0.0.1    harbor.farm.evil/d' /etc/hosts \
@@ -177,5 +179,11 @@ sudo cat /etc/docker/daemon.json
 echo ""
 
 echo "Reboot system please."
+echo "Remember to create project 'openstudiolandscapes' in Harbor afterwards."
+
+read -r -e -p "Reboot now?" choice_reboot
+[[ "$choice_reboot" == [Yy]* ]] \
+    && sudo systemctl reboot \
+|| echo "Ok, let's reboot later."
 
 exit 0
