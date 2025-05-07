@@ -12,7 +12,7 @@ from getpass import getpass, getuser
 # - python3
 # - curl
 # Usage:
-# python3 <(curl https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.sh)
+# python3 <(curl https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.py)
 
 
 def sudo_pass() -> bytes:
