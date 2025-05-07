@@ -123,8 +123,7 @@ def script_clone_openstudiolandscapes(
 ) -> pathlib.Path:
 
     print(" ENTER EMAIL ".center(_get_terminal_size()[0], "#"))
-    print("Enter your email: ")
-    email = input()
+    email = input("Enter your email: ")
 
     with tempfile.NamedTemporaryFile(
             delete=False,
