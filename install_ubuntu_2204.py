@@ -12,6 +12,7 @@ from typing import Tuple
 # Requirements:
 # - python3
 # - curl
+# - sudo
 # Usage:
 # python3 <(curl --silent https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.py)
 
@@ -93,7 +94,11 @@ def script_prep() -> pathlib.Path:
                 "sudo apt-get update\n",
                 "sudo apt-get upgrade -y\n",
                 "\n",
-                "sudo apt-get install -y openssh-server git htop vim\n",
+                "sudo apt-get install -y openssh-server\n",
+                "sudo apt-get install -y git\n",
+                "sudo apt-get install -y htop\n",
+                "sudo apt-get install -y vim\n",
+                "\n",
                 "sudo apt-get -y autoremove\n",
                 "sudo apt-get clean\n",
                 "\n",
