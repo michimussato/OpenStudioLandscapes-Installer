@@ -140,7 +140,7 @@ def script_clone_openstudiolandscapes(
 
     print(" CLONE OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
 
-    print(" ENTER EMAIL ".center(_get_terminal_size()[0], "#"))
+    print(" ENTER EMAIL ".center(_get_terminal_size()[0], "="))
     email = input("Enter your email: ")
 
     with tempfile.NamedTemporaryFile(
