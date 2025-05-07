@@ -13,7 +13,7 @@ from typing import Tuple
 # - python3
 # - curl
 # Usage:
-# python3 <(curl https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.py)
+# python3 <(curl --silent https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.py)
 
 
 def _get_terminal_size() -> Tuple[int, int]:
