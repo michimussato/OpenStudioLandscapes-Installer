@@ -19,6 +19,7 @@ from typing import Tuple
 
 def _get_terminal_size() -> Tuple[int, int]:
     # https://stackoverflow.com/a/14422538
+    # https://stackoverflow.com/a/18243550
     cols, rows = shutil.get_terminal_size((80, 20))
     return cols, rows
 
@@ -44,13 +45,18 @@ def script_run(
         cmd.insert(0, shutil.which("sudo"))
         cmd.insert(1, "--stdin")
 
-    proc = subprocess.run(
-        cmd,
-        input=None if not sudo else sudo_pass(),
-        check=True,
-        # cwd=script_prep.parent.as_posix(),
-        # env=os.environ,
-    )
+    try:
+        proc = subprocess.run(
+            cmd,
+            input=None if not sudo else sudo_pass(),
+            check=True,
+            # cwd=script_prep.parent.as_posix(),
+            # env=os.environ,
+        )
+    except subprocess.CalledProcessError as e:
+        with open(script.as_posix(), "r") as f:
+            print(f.read())
+        raise e
 
     if proc.returncode:
         raise RuntimeError(proc)
@@ -146,8 +152,12 @@ def script_clone_openstudiolandscapes(
                 "\n",
                 f"ssh-keyscan github.com >> {known_hosts_file.as_posix()}\n",
                 "\n",
-                f"mkdir -p {openstudiolandscapes_repo_dir.as_posix()}\n",
-                f"git -C {openstudiolandscapes_repo_dir.parent.as_posix()} clone git@github.com:michimussato/OpenStudioLandscapes.git\n",
+                f"if [ ! -d {openstudiolandscapes_repo_dir.as_posix()} ]; then\n",
+                f"    mkdir -p {openstudiolandscapes_repo_dir.as_posix()}\n",
+                f"    git -C {openstudiolandscapes_repo_dir.parent.as_posix()} clone git@github.com:michimussato/OpenStudioLandscapes.git\n",
+                "else\n",
+                f"    git -C {openstudiolandscapes_repo_dir.as_posix()} pull\n",
+                "fi\n",
             ]
         )
 
@@ -171,7 +181,7 @@ def script_install_python(
                 "#!/bin/env bash\n",
                 "\n",
                 "\n",
-                "while ! sudo apt-get upgrade -y; then\n",
+                "while [ ! sudo apt-get upgrade -y ]; then\n",
                 "sudo apt-get upgrade -y\n",
                 "    echo \"Update in progress in the background...\"\n",
                 "    sleep 5\n",
