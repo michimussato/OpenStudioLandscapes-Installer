@@ -674,6 +674,6 @@ if __name__ == "__main__":
         script=script_add_alias(),
     )
     ret_script_reboot = script_run(
-        sudo=True,
+        sudo=False,
         script=script_reboot(),
     )
