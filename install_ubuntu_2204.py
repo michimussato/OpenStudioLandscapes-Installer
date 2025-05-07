@@ -120,6 +120,7 @@ def script_prep() -> pathlib.Path:
                 "sudo apt-get install -y git\n",
                 "sudo apt-get install -y htop\n",
                 "sudo apt-get install -y vim\n",
+                "sudo apt-get install -y graphviz\n",
                 "\n",
                 "sudo apt-get -y autoremove\n",
                 "sudo apt-get clean\n",
@@ -407,8 +408,6 @@ def script_install_openstudiolandscapes(
             [
                 "#!/bin/env bash\n",
                 "\n",
-                "\n",
-                "sudo apt-get install -y graphviz\n",
                 "\n",
                 f"cd {openstudiolandscapes_repo_dir.as_posix()}\n",
                 f"{shutil.which('python3.11')} -m venv .venv\n",
