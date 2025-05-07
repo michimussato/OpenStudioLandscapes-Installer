@@ -6,6 +6,7 @@ import subprocess
 import tempfile
 import pathlib
 from getpass import getpass, getuser
+from typing import Tuple
 
 
 # Requirements:
@@ -15,10 +16,14 @@ from getpass import getpass, getuser
 # python3 <(curl https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/install_ubuntu_2204.py)
 
 
-def sudo_pass() -> bytes:
+def _get_terminal_size() -> Tuple[int, int]:
     # https://stackoverflow.com/a/14422538
     cols, rows = shutil.get_terminal_size((80, 20))
-    print(" ENTER PASSWORD ".center(cols, "#"))
+    return cols, rows
+
+
+def sudo_pass() -> bytes:
+    print(" ENTER PASSWORD ".center(_get_terminal_size()[0], "#"))
     _sudo_pass = getpass(prompt=f"Sudo Password for User {getuser()}: ")
     return _sudo_pass.encode()
 
@@ -105,6 +110,7 @@ def script_clone_openstudiolandscapes(
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
+    print(" ENTER EMAIL ".center(_get_terminal_size()[0], "#"))
     print("Enter your email: ")
     email = input()
 
