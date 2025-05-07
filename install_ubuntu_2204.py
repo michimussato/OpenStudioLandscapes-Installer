@@ -510,6 +510,50 @@ def script_init_pihole(
         return pathlib.Path(script.name)
 
 
+def script_add_alias(
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    bashrc: pathlib.Path = pathlib.Path("~/.bashrc").expanduser(),
+    openstudiolandscapesrc: pathlib.Path = pathlib.Path("~/.openstudiolandscapesrc").expanduser(),
+) -> pathlib.Path:
+
+    with tempfile.NamedTemporaryFile(
+            delete=False,
+            encoding="utf-8",
+            prefix="ubuntu_2204_",
+            suffix=".sh",
+            mode="x",
+    ) as script:
+        script.writelines(
+            [
+                "#!/bin/env bash\n",
+                "\n",
+                "\n",
+                f"sed -i -e \"\$asource ~/.openstudiolandscapesrc\" -e \"/source ~/.openstudiolandscapesrc/d\" {bashrc.as_posix()}\n",
+                "done\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                f"cat > {openstudiolandscapesrc.as_posix()}<< EOF\n",
+                "# ~/.openstudiolandscapesrc\n",
+                f"alias openstudiolandscapes_up=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions harbor_up_detach dagster_postgres_up_detach dagster_postgres && deactivate && popd\"\n",
+                f"alias openstudiolandscapes_down=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions dagster_postgres_down harbor_down && deactivate && popd\"\n",
+                "\n",
+                "EOF\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
+        return pathlib.Path(script.name)
+
+
 def script_reboot() -> pathlib.Path:
 
     with tempfile.NamedTemporaryFile(
@@ -577,9 +621,13 @@ if __name__ == "__main__":
         sudo=True,
         script=script_init_harbor(),
     )
-    ret_script_init_pihole = script_run(
+    # ret_script_init_pihole = script_run(
+    #     sudo=False,
+    #     script=script_init_pihole(),
+    # )
+    ret_script_add_alias = script_run(
         sudo=False,
-        script=script_init_pihole(),
+        script=script_add_alias(),
     )
     ret_script_reboot = script_run(
         sudo=True,
