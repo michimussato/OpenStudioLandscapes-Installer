@@ -36,6 +36,10 @@ def script_run(
     script: pathlib.Path,
 ) -> tuple[bytes, bytes]:
 
+    with open(script.as_posix(), "r") as f:
+        print(f"Script: {script.as_posix()}")
+        print(f.read())
+
     cmd = [
         shutil.which("bash"),
         script.as_posix(),
@@ -55,8 +59,8 @@ def script_run(
         )
     except subprocess.CalledProcessError as e:
         print(cmd)
-        with open(script.as_posix(), "r") as f:
-            print(f.read())
+        # with open(script.as_posix(), "r") as f:
+        #     print(f.read())
         raise e
 
     if proc.returncode:
@@ -652,7 +656,7 @@ if __name__ == "__main__":
         ),
     )
     ret_script_install_openstudiolandscapes = script_run(
-        sudo=True,
+        sudo=False,
         script=script_install_openstudiolandscapes(),
     )
     ret_script_etc_hosts = script_run(
