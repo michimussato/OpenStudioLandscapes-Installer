@@ -249,6 +249,7 @@ def script_install_python(
                 "sudo apt-get install -y pkg-config\n",
                 "sudo apt-get install -y liblzma-dev\n",
                 "sudo apt-get install -y libbz2-dev\n",
+                "sudo apt-get install -y libsqlite3-dev\n",
                 "sudo apt-get install -y curl\n",
                 "\n",
                 "pushd \"$(mktemp -d)\" || exit\n",
