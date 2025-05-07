@@ -82,6 +82,13 @@ def script_disable_unattended_upgrades() -> pathlib.Path:
             ]
         )
 
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
         return pathlib.Path(script.name)
 
 
@@ -110,6 +117,13 @@ def script_prep() -> pathlib.Path:
                 "sudo apt-get clean\n",
                 "\n",
                 "sudo systemctl enable --now ssh\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
             ]
         )
 
@@ -158,6 +172,13 @@ def script_clone_openstudiolandscapes(
                 "else\n",
                 f"    git -C {openstudiolandscapes_repo_dir.as_posix()} pull\n",
                 "fi\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
             ]
         )
 
@@ -211,6 +232,13 @@ def script_install_python(
                 "sudo make altinstall\n",
                 "\n",
                 "popd || exit\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
             ]
         )
 
@@ -274,8 +302,6 @@ def script_install_docker(
                     "cat > /etc/docker/daemon.json\n",
                     f"{daemon_json_}\n",
                     "EOF\n",
-                    "echo\"Your /etc/docker/daemon.json file looks like:\"\n",
-                    "cat /etc/docker/daemon.json\n",
                 ]
             )
 
@@ -311,6 +337,21 @@ def script_install_docker(
                 "\n",
                 "sudo systemctl daemon-reload\n",
                 "sudo systemctl restart docker\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "echo\"Your /etc/docker/daemon.json file looks like:\"\n",
+                "cat /etc/docker/daemon.json\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
             ]
         )
 
@@ -350,6 +391,13 @@ def script_install_openstudiolandscapes(
             ]
         )
 
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
         return pathlib.Path(script.name)
 
 
@@ -375,9 +423,21 @@ def script_etc_hosts() -> pathlib.Path:
                 "; do \n",
                 "    sed -i -e \"\$a127.0.0.1    $fqdn\" -e \"/127.0.0.1    ${fqdn}/d\" /etc/hosts\n",
                 "done\n",
+            ]
+        )
+
+        script.writelines(
+            [
                 "\n",
                 "echo\"Your /etc/hosts file looks like:\"\n",
                 "cat /etc/hosts\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
             ]
         )
 
@@ -407,6 +467,13 @@ def script_init_harbor(
             ]
         )
 
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
         return pathlib.Path(script.name)
 
 
@@ -433,6 +500,13 @@ def script_init_pihole(
             ]
         )
 
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
         return pathlib.Path(script.name)
 
 
@@ -450,7 +524,17 @@ def script_reboot() -> pathlib.Path:
                 "#!/bin/env bash\n",
                 "\n",
                 "\n",
-                f"{shutil.which('systemctl')} reboot\n",
+                "read -r -e -p \"Reboot now? \" choice_reboot\n",
+                "[[ \"$choice_reboot\" == [Yy]* ]] \\\n",
+                "    && sudo systemctl reboot \\\n",
+                "|| echo \"Ok, let's reboot later.\"\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
             ]
         )
 
@@ -497,4 +581,7 @@ if __name__ == "__main__":
         sudo=False,
         script=script_init_pihole(),
     )
-    script_reboot()
+    ret_script_reboot = script_run(
+        sudo=True,
+        script=script_reboot(),
+    )
