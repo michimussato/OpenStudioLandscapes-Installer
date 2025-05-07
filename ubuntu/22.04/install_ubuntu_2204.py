@@ -142,7 +142,7 @@ def script_prep() -> pathlib.Path:
 def script_clone_openstudiolandscapes(
     ssh_key_file: pathlib.Path = pathlib.Path("~/.ssh/id_ed25519").expanduser(),
     known_hosts_file: pathlib.Path = pathlib.Path("~/.ssh/known_hosts").expanduser(),
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
 ) -> pathlib.Path:
 
     print(" CLONE OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
@@ -393,7 +393,7 @@ def script_install_docker(
 
 
 def script_install_openstudiolandscapes(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
 ) -> pathlib.Path:
 
     print(" INSTALL OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
@@ -481,7 +481,7 @@ def script_etc_hosts() -> pathlib.Path:
 
 
 def script_init_harbor(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
 ) -> pathlib.Path:
 
     print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
@@ -516,7 +516,7 @@ def script_init_harbor(
 
 
 def script_init_pihole(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
 ) -> pathlib.Path:
 
     print(" INIT PI-HOLE ".center(_get_terminal_size()[0], "#"))
@@ -551,7 +551,7 @@ def script_init_pihole(
 
 
 def script_add_alias(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
     bashrc: pathlib.Path = pathlib.Path("~/.bashrc").expanduser(),
     openstudiolandscapesrc: pathlib.Path = pathlib.Path("~/.openstudiolandscapesrc").expanduser(),
 ) -> pathlib.Path:
