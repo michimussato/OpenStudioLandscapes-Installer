@@ -16,7 +16,11 @@ from getpass import getpass, getuser
 
 
 def sudo_pass() -> bytes:
+    # https://stackoverflow.com/a/14422538
+    cols, rows = shutil.get_terminal_size((80, 20))
+    print(' ENTER PASSWORD '.center(cols, '#'))
     _sudo_pass = getpass(prompt='Sudo Password: ')
+    # print("#" * 80)
     return _sudo_pass.encode()
 
 
