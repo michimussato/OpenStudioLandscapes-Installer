@@ -54,6 +54,7 @@ def script_run(
             # env=os.environ,
         )
     except subprocess.CalledProcessError as e:
+        print(cmd)
         with open(script.as_posix(), "r") as f:
             print(f.read())
         raise e
@@ -181,8 +182,7 @@ def script_install_python(
                 "#!/bin/env bash\n",
                 "\n",
                 "\n",
-                "while [ ! sudo apt-get upgrade -y ]; then\n",
-                "sudo apt-get upgrade -y\n",
+                "while [ ! sudo apt-get upgrade -y ]; do\n",
                 "    echo \"Update in progress in the background...\"\n",
                 "    sleep 5\n",
                 "done;\n",
