@@ -202,6 +202,22 @@ def script_install_python(
                 "#!/bin/env bash\n",
                 "\n",
                 "\n",
+            ],
+        )
+
+        script.writelines(
+            [
+                f"if [ which python3.11 ]; then\n",
+                "    echo \"python3.11 is already installed\"\n",
+                "    exit 0\n",
+                "fi\n",
+                "\n",
+                "\n",
+            ]
+        )
+
+        script.writelines(
+            [
                 "while [ ! sudo apt-get upgrade -y ]; do\n",
                 "    echo \"Update in progress in the background...\"\n",
                 "    sleep 5\n",
@@ -385,6 +401,10 @@ def script_install_openstudiolandscapes(
                 "pip install -e .[dev]\n",
                 "\n",
                 "nox -s clone_features\n",
+                # Todo
+                #  - [ ] This fails
+                #        Permission denied (publickey)
+                #        fatal: Could not read from the repository
                 "nox -s install_features_into_engine\n",
                 "\n",
                 "deactivate\n",
@@ -529,7 +549,6 @@ def script_add_alias(
                 "\n",
                 "\n",
                 f"sed -i -e \"\$asource ~/.openstudiolandscapesrc\" -e \"/source ~/.openstudiolandscapesrc/d\" {bashrc.as_posix()}\n",
-                "done\n",
             ]
         )
 
