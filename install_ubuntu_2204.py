@@ -571,7 +571,7 @@ def script_add_alias(
                 "\n",
                 "\n",
                 # Escape dots
-                f"sed -i -e '$asource ~/\.openstudiolandscapesrc' -e '/source ~/\.openstudiolandscapesrc/d' {bashrc.as_posix()}\n",
+                f"sed -i -e '$asource $HOME/\.openstudiolandscapesrc' -e '/source $HOME\/\.openstudiolandscapesrc/d' {bashrc.as_posix()}\n",
             ]
         )
 
