@@ -207,7 +207,7 @@ def script_install_python(
 
         script.writelines(
             [
-                f"if [ which python3.11 ]; then\n",
+                f"if which python3.11; then\n",
                 "    echo \"python3.11 is already installed\"\n",
                 "    exit 0\n",
                 "fi\n",
