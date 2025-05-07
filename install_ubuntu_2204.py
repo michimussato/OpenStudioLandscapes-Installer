@@ -37,8 +37,10 @@ def script_run(
 ) -> tuple[bytes, bytes]:
 
     with open(script.as_posix(), "r") as f:
+        print(" SCRIPT START ".center(_get_terminal_size()[0], "-"))
         print(f"Script: {script.as_posix()}")
         print(f.read())
+        print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
     cmd = [
         shutil.which("bash"),
@@ -417,10 +419,6 @@ def script_install_openstudiolandscapes(
                 "pip install -e .[dev]\n",
                 "\n",
                 "nox -s clone_features\n",
-                # Todo
-                #  - [ ] This fails
-                #        Permission denied (publickey)
-                #        fatal: Could not read from the repository
                 "nox -s install_features_into_engine\n",
                 "\n",
                 "deactivate\n",
