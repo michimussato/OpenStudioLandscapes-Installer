@@ -49,7 +49,27 @@ def script_run(
     return proc.stdout, proc.stderr
 
 
-def script_prep_write() -> pathlib.Path:
+def script_disable_unattended_upgrades() -> pathlib.Path:
+    with tempfile.NamedTemporaryFile(
+            delete=False,
+            encoding="utf-8",
+            prefix="ubuntu_2204_",
+            suffix=".sh",
+            mode="x",
+    ) as script:
+        script.writelines(
+            [
+                "#!/bin/env bash\n",
+                "\n",
+                "\n",
+                "sudo systemctl disable --now unattended-upgrades\n",
+            ]
+        )
+
+        return pathlib.Path(script.name)
+
+
+def script_prep() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
@@ -415,10 +435,14 @@ def script_reboot() -> pathlib.Path:
 
 
 if __name__ == "__main__":
-    # script = script_prep_write()
+
+    ret_script_disable_unattended_upgrades = script_run(
+        sudo=True,
+        script=script_disable_unattended_upgrades(),
+    )
     ret_script_prep = script_run(
         sudo=True,
-        script=script_prep_write(),
+        script=script_prep(),
     )
     ret_script_clone_openstudiolandscapes = script_run(
         sudo=False,
