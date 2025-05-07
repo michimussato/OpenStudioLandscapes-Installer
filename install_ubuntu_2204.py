@@ -25,7 +25,7 @@ def _get_terminal_size() -> Tuple[int, int]:
 
 
 def sudo_pass() -> bytes:
-    print(" ENTER PASSWORD ".center(_get_terminal_size()[0], "#"))
+    print(" ENTER PASSWORD ".center(_get_terminal_size()[0], "="))
     _sudo_pass = getpass(prompt=f"Sudo Password for User {getuser()}: ")
     return _sudo_pass.encode()
 
@@ -66,7 +66,7 @@ def script_run(
 
 
 def script_disable_unattended_upgrades() -> pathlib.Path:
-    print(" DISABLE UNATTENDED UPGRADES ".center(_get_terminal_size()[0], "="))
+    print(" DISABLE UNATTENDED UPGRADES ".center(_get_terminal_size()[0], "#"))
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
@@ -94,7 +94,7 @@ def script_disable_unattended_upgrades() -> pathlib.Path:
 
 
 def script_prep() -> pathlib.Path:
-    print(" PREP ".center(_get_terminal_size()[0], "="))
+    print(" PREP ".center(_get_terminal_size()[0], "#"))
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
@@ -138,7 +138,7 @@ def script_clone_openstudiolandscapes(
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
-    print(" CLONE OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "="))
+    print(" CLONE OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
 
     print(" ENTER EMAIL ".center(_get_terminal_size()[0], "#"))
     email = input("Enter your email: ")
@@ -195,7 +195,7 @@ def script_install_python(
     PYTHON_PAT: int = 11,
 ) -> pathlib.Path:
 
-    print(f" INSTALL PYTHON {PYTHON_MAJ}.{PYTHON_MIN}.{PYTHON_PAT}".center(_get_terminal_size()[0], "="))
+    print(f" INSTALL PYTHON {PYTHON_MAJ}.{PYTHON_MIN}.{PYTHON_PAT}".center(_get_terminal_size()[0], "#"))
 
     with tempfile.NamedTemporaryFile(
             delete=False,
@@ -274,7 +274,7 @@ def script_install_docker(
     url_harbor: str = "http://harbor.farm.evil:80",
 ) -> pathlib.Path:
 
-    print(" INSTALL DOCKER ".center(_get_terminal_size()[0], "="))
+    print(" INSTALL DOCKER ".center(_get_terminal_size()[0], "#"))
 
     with tempfile.NamedTemporaryFile(
             delete=False,
@@ -388,7 +388,7 @@ def script_install_openstudiolandscapes(
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
-    print(" INSTALL OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "="))
+    print(" INSTALL OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
 
     with tempfile.NamedTemporaryFile(
             delete=False,
@@ -435,7 +435,7 @@ def script_install_openstudiolandscapes(
 
 def script_etc_hosts() -> pathlib.Path:
 
-    print(" EDIT /etc/hosts ".center(_get_terminal_size()[0], "="))
+    print(" EDIT /etc/hosts ".center(_get_terminal_size()[0], "#"))
 
     with tempfile.NamedTemporaryFile(
             delete=False,
@@ -482,7 +482,7 @@ def script_init_harbor(
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
-    print(" INIT HARBOR ".center(_get_terminal_size()[0], "="))
+    print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
 
     with tempfile.NamedTemporaryFile(
             delete=False,
@@ -517,7 +517,7 @@ def script_init_pihole(
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
-    print(" INIT PI-HOLE ".center(_get_terminal_size()[0], "="))
+    print(" INIT PI-HOLE ".center(_get_terminal_size()[0], "#"))
 
     with tempfile.NamedTemporaryFile(
             delete=False,
@@ -554,7 +554,7 @@ def script_add_alias(
     openstudiolandscapesrc: pathlib.Path = pathlib.Path("~/.openstudiolandscapesrc").expanduser(),
 ) -> pathlib.Path:
 
-    print(" ADD ALIASES ".center(_get_terminal_size()[0], "="))
+    print(" ADD ALIASES ".center(_get_terminal_size()[0], "#"))
 
     with tempfile.NamedTemporaryFile(
             delete=False,
@@ -596,7 +596,7 @@ def script_add_alias(
 
 def script_reboot() -> pathlib.Path:
 
-    print(" REBOOT ".center(_get_terminal_size()[0], "="))
+    print(" REBOOT ".center(_get_terminal_size()[0], "#"))
 
     with tempfile.NamedTemporaryFile(
             delete=False,
