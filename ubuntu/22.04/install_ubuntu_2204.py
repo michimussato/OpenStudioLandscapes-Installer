@@ -42,9 +42,10 @@ def script_run(
         print(f"Script: {script.as_posix()}")
         print(f.read())
         lno = 0
+        len_ = len(str(len(f.readlines())))
         for l in f.readlines():
             lno += 1
-            print(f"{str(lno).ljust(4)}: {l}")
+            print(f"{str(lno).ljust(len_)}: {l}")
         # print(f.read
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
