@@ -60,10 +60,6 @@ def script_run(
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
     try:
-        # proc = subprocess.Popen(
-        #     cmd,
-        #
-        # )
         proc = subprocess.run(
             cmd,
             input=None if not sudo else sudo_pass(),
