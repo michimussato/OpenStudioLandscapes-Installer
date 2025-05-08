@@ -205,7 +205,7 @@ def script_clone_openstudiolandscapes(
             [
                 "\n",
                 f"if [ -d {openstudiolandscapes_repo_dir.as_posix()} ]; then\n",
-                f"    mv {openstudiolandscapes_repo_dir.as_posix()} $(date + \"%Y-%m-%d_%H-%m-%S\")_{openstudiolandscapes_repo_dir.as_posix()}\n",
+                f"    mv {openstudiolandscapes_repo_dir.as_posix()} {openstudiolandscapes_repo_dir.as_posix()}_$(date + \"%Y-%m-%d_%H-%m-%S\")\n",
                 "fi\n",
             ]
         )
