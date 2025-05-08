@@ -512,6 +512,7 @@ def script_harbor_prepare(
                 f"cd {openstudiolandscapes_repo_dir.as_posix()}\n",
                 "source .venv/bin/activate\n",
                 "nox --session harbor_prepare\n",
+                "deactivate\n",
             ]
         )
 
