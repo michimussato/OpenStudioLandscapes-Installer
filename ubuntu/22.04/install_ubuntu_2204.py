@@ -41,6 +41,11 @@ def script_run(
         print(" SCRIPT START ".center(_get_terminal_size()[0], "-"))
         print(f"Script: {script.as_posix()}")
         print(f.read())
+        lno = 0
+        for l in f.readlines():
+            lno += 1
+            print(f"{str(lno).ljust(4)}: {l}")
+        # print(f.read
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
     cmd = [
