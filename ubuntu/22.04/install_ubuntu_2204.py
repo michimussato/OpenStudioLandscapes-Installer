@@ -46,7 +46,7 @@ def script_run(
         len_ = len(str(len(lines)))
         for l in lines:
             lno += 1
-            print(f"{str(lno).ljust(len_)}: {l}")
+            print(f"{str(lno).ljust(len_)}: {l.rstrip()}")
         # print(f.read
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
