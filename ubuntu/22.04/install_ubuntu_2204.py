@@ -49,7 +49,7 @@ def script_run(
 
     with open(script.as_posix(), "r") as f:
         lines = f.readlines()
-        print(" SCRIPT ".center(_get_terminal_size()[0], "-"))
+        print(" COMMAND ".center(_get_terminal_size()[0], "-"))
         print(f" {shlex.join(cmd)} ".center(_get_terminal_size()[0], " "))
         print(" SCRIPT START ".center(_get_terminal_size()[0], "-"))
         lno = 0
@@ -287,7 +287,7 @@ def script_install_python(
 def script_install_docker(
     docker_user: str,
     edit_docker_daemon_json: bool = True,
-    url_harbor: str = "http://hurl_harborarbor.farm.evil:80",
+    url_harbor: str = "http://harbor.farm.evil:80",
 ) -> pathlib.Path:
 
     print(" INSTALL DOCKER ".center(_get_terminal_size()[0], "#"))
@@ -489,9 +489,9 @@ def script_etc_hosts() -> pathlib.Path:
 
 
 def script_harbor_prepare(
-    url_harbor: str = "http://harbor.farm.evil:80",
-    username_harbor: str = "admin",
-    password_harbor: str = "Harbor12345",
+    # url_harbor: str = "http://harbor.farm.evil:80",
+    # username_harbor: str = "admin",
+    # password_harbor: str = "Harbor12345",
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
@@ -703,8 +703,8 @@ def script_add_alias(
             [
                 f"cat > {openstudiolandscapesrc.as_posix()}<< EOF\n",
                 "# ~/.openstudiolandscapesrc\n",
-                f"alias openstudiolandscapes_up=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions harbor_up_detach dagster_postgres_up_detach dagster_postgres && deactivate && popd\"\n",
-                f"alias openstudiolandscapes_down=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions dagster_postgres_down harbor_down && deactivate && popd\"\n",
+                f"alias openstudiolandscapes-up=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions harbor_up_detach dagster_postgres_up_detach dagster_postgres && deactivate && popd\"\n",
+                f"alias openstudiolandscapes-down=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions dagster_postgres_down harbor_down && deactivate && popd\"\n",
                 "\n",
                 "EOF\n",
             ]
