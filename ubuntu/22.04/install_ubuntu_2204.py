@@ -60,6 +60,10 @@ def script_run(
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
     try:
+        # proc = subprocess.Popen(
+        #     cmd,
+        #
+        # )
         proc = subprocess.run(
             cmd,
             input=None if not sudo else sudo_pass(),
@@ -787,11 +791,11 @@ if __name__ == "__main__":
         script=script_etc_hosts(),
     )
     ret_script_harbor_prepare = script_run(
-        sudo=True,
+        sudo=False,
         script=script_harbor_prepare(),
     )
     ret_script_harbor_init = script_run(
-        sudo=True,
+        sudo=False,
         script=script_harbor_init(),
     )
     # ret_script_init_pihole = script_run(
