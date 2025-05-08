@@ -191,13 +191,28 @@ def script_clone_openstudiolandscapes(
                 "done\n",
                 "\n",
                 f"ssh-keyscan github.com >> {known_hosts_file.as_posix()}\n",
+            ]
+        )
+
+        # If openstudiolandscapes_repo_dir already exists, we move it out
+        # of the way. At least until there is a more finegrained solution
+        # in place to deal with existing installations.
+        script.writelines(
+            [
+                "\n",
+                f"if [ -d {openstudiolandscapes_repo_dir.as_posix()} ]; then\n",
+                f"    mv {openstudiolandscapes_repo_dir.as_posix()} $(date + \"%Y-%m-%d_%H-%m-%S\")_{openstudiolandscapes_repo_dir.as_posix()}\n",
+                "fi\n",
+            ]
+        )
+
+        script.writelines(
+            [
                 "\n",
                 f"if [ ! -d {openstudiolandscapes_repo_dir.as_posix()} ]; then\n",
                 f"    mkdir -p {openstudiolandscapes_repo_dir.as_posix()}\n",
-                f"    git -C {openstudiolandscapes_repo_dir.parent.as_posix()} clone git@github.com:michimussato/OpenStudioLandscapes.git\n",
-                "else\n",
-                f"    git -C {openstudiolandscapes_repo_dir.as_posix()} pull\n",
                 "fi\n",
+                f"git -C {openstudiolandscapes_repo_dir.parent.as_posix()} clone --tags git@github.com:michimussato/OpenStudioLandscapes.git\n",
             ]
         )
 
