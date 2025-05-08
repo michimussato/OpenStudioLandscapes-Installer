@@ -584,8 +584,6 @@ def script_harbor_up(
                 "source .venv/bin/activate\n",
                 "nox --session harbor_up_detach\n",
                 "\n",
-                "nox --session harbor_down\n",
-                "\n",
                 "deactivate\n",
             ]
         )
