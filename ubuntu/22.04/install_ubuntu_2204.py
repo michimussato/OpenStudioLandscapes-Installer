@@ -2,6 +2,7 @@
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
 import base64
 import json
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -37,18 +38,6 @@ def script_run(
     script: pathlib.Path,
 ) -> tuple[bytes, bytes]:
 
-    with open(script.as_posix(), "r") as f:
-        lines = f.readlines()
-        print(" SCRIPT ".center(_get_terminal_size()[0], "-"))
-        print(f" {script.as_posix()} ".center(_get_terminal_size()[0], " "))
-        print(" SCRIPT START ".center(_get_terminal_size()[0], "-"))
-        lno = 0
-        len_ = len(str(len(lines)))
-        for l in lines:
-            lno += 1
-            print(f"{str(lno).ljust(len_)}: {l.rstrip()}")
-        print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
-
     cmd = [
         shutil.which("bash"),
         script.as_posix(),
@@ -57,6 +46,18 @@ def script_run(
     if sudo:
         cmd.insert(0, shutil.which("sudo"))
         cmd.insert(1, "--stdin")
+
+    with open(script.as_posix(), "r") as f:
+        lines = f.readlines()
+        print(" SCRIPT ".center(_get_terminal_size()[0], "-"))
+        print(f" {shlex.join(cmd)} ".center(_get_terminal_size()[0], " "))
+        print(" SCRIPT START ".center(_get_terminal_size()[0], "-"))
+        lno = 0
+        len_ = len(str(len(lines)))
+        for l in lines:
+            lno += 1
+            print(f"{str(lno).ljust(len_)}: {l.rstrip()}")
+        print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
     try:
         proc = subprocess.run(
