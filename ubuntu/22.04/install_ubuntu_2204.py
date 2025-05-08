@@ -482,7 +482,7 @@ def script_etc_hosts() -> pathlib.Path:
 
 
 def script_init_harbor(
-    url_harbor: str = "http://localhost:80",
+    url_harbor: str = "http://harbor.farm.evil:80",
     username_harbor: str = "admin",
     password_harbor: str = "Harbor12345",
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
@@ -522,6 +522,13 @@ def script_init_harbor(
                 "  -d '{\n",
                 "  \"project_name\": \"openstudiolandscapes\",\n",
                 "}'\n",
+                # <html>
+                # <head><title>502 Bad Gateway</title></head>
+                # <body>
+                # <center><h1>502 Bad Gateway</h1></center>
+                # <hr><center>nginx</center>
+                # </body>
+                # </html>
             ]
         )
 
@@ -534,6 +541,13 @@ def script_init_harbor(
                 "  -H 'accept: application/json' \\\n",
                 "  -H 'X-Is-Resource-Name: false' \\\n",
                 f"  -H 'authorization: Basic {base64.b64encode(str(':'.join([username_harbor, password_harbor])).encode('utf-8')).decode('ascii')}'\n",
+                # <html>
+                # <head><title>502 Bad Gateway</title></head>
+                # <body>
+                # <center><h1>502 Bad Gateway</h1></center>
+                # <hr><center>nginx</center>
+                # </body>
+                # </html>
             ]
         )
 
