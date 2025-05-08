@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
+import base64
 import json
 import shutil
 import subprocess
@@ -481,6 +482,9 @@ def script_etc_hosts() -> pathlib.Path:
 
 
 def script_init_harbor(
+    url_harbor: str = "http://localhost:80",
+    username_harbor: str = "admin",
+    password_harbor: str = "Harbor12345",
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
 ) -> pathlib.Path:
 
@@ -501,6 +505,43 @@ def script_init_harbor(
                 f"cd {openstudiolandscapes_repo_dir.as_posix()}\n",
                 "source .venv/bin/activate\n",
                 "nox --session harbor_prepare\n",
+                "nox --session harbor_up_detach\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "# Create project `openstudiolandscapes`\n",
+                "curl -X 'POST' \\\n",
+                f"  '{url_harbor}/api/v2.0/projects' \\\n",
+                "  -H 'accept: application/json' \\\n",
+                "  -H 'X-Resource-Name-In-Location: false' \\\n",
+                f"  -H 'authorization: Basic {base64.b64encode(str(':'.join([username_harbor, password_harbor])).encode('utf-8')).decode('ascii')}' \\\n",
+                "  -H 'Content-Type: application/json' \\\n",
+                "  -d '{\n",
+                "  \"project_name\": \"openstudiolandscapes\",\n",
+                "}'\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "# Delete project `library`\n",
+                "curl -X 'DELETE' \\\n",
+                f"  '{url_harbor}/api/v2.0/projects/library' \\\n",
+                "  -H 'accept: application/json' \\\n",
+                "  -H 'X-Is-Resource-Name: false' \\\n",
+                f"  -H 'authorization: Basic {base64.b64encode(str(':'.join([username_harbor, password_harbor])).encode('utf-8')).decode('ascii')}'\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "nox --session harbor_down\n",
+                "\n",
                 "deactivate\n",
             ]
         )
