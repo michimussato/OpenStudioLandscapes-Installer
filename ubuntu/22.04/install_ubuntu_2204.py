@@ -557,11 +557,11 @@ def script_init_harbor(
             [
                 "\n",
                 "# Delete project `library`\n",
-                "curl -X 'DELETE' \\\n",
-                f"  '{url_harbor}/api/v2.0/projects/library' \\\n",
                 "\n",
                 "sleep 30\n",
                 "\n",
+                "curl -X 'DELETE' \\\n",
+                f"  '{url_harbor}/api/v2.0/projects/library' \\\n",
                 "  -H 'accept: application/json' \\\n",
                 "  -H 'X-Is-Resource-Name: false' \\\n",
                 f"  -H 'authorization: Basic {base64.b64encode(str(':'.join([username_harbor, password_harbor])).encode('utf-8')).decode('ascii')}'\n",
