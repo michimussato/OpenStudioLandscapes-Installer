@@ -421,7 +421,7 @@ def script_install_docker(
         script.writelines(
             [
                 "\n",
-                "echo\"Your /etc/docker/daemon.json file looks like:\"\n",
+                "echo \"Your /etc/docker/daemon.json file looks like:\"\n",
                 "cat /etc/docker/daemon.json\n",
             ]
         )
@@ -509,7 +509,7 @@ def script_etc_hosts() -> pathlib.Path:
         script.writelines(
             [
                 "\n",
-                "echo\"Your /etc/hosts file looks like:\"\n",
+                "echo \"Your /etc/hosts file looks like:\"\n",
                 "cat /etc/hosts\n",
             ]
         )
