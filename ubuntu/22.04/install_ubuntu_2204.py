@@ -855,7 +855,7 @@ if __name__ == "__main__":
     )
     ret_script_harbor_up = script_run(
         sudo=False,
-        script=script_harbor_down(),
+        script=script_harbor_up(),
     )
     ret_script_harbor_init = script_run(
         sudo=False,
