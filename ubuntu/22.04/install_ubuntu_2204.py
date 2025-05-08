@@ -28,7 +28,7 @@ def _get_terminal_size() -> Tuple[int, int]:
 
 def sudo_pass() -> bytes:
     print(" ENTER PASSWORD ".center(_get_terminal_size()[0], "="))
-    _sudo_pass = getpass(prompt=f"Sudo Password for User {getuser()}: ")
+    _sudo_pass = getpass(prompt=f"Sudo Password for User `{getuser()}`: ")
     return _sudo_pass.encode()
 
 
@@ -553,31 +553,11 @@ def script_harbor_init(
             ]
         )
 
-        # # https://stackoverflow.com/a/25320983
-        # script.writelines(
-        #     [
-        #         "\n",
-        #         # "while [[ \"*<head><title>502 Bad Gateway</title></head>*\"  $(curl http://harbor.farm.evil:80/api/v2.0) ]]; do\n",
-        #         "while [[ \"*<head><title>502 Bad Gateway</title></head>*\"  $(curl http://harbor.farm.evil:80/api/v2.0) ]]; do\n",
-        #         "    sleep 1\n",
-        #         "done\n",
-        #         # <html>
-        #         # <head><title>502 Bad Gateway</title></head>
-        #         # <body>
-        #         # <center><h1>502 Bad Gateway</h1></center>
-        #         # <hr><center>nginx</center>
-        #         # </body>
-        #         # </html>
-        #     ]
-        # )
-
         # Create `openstudiolandscapes` if it does not exist
         script.writelines(
             [
                 "\n",
                 "# Create project `openstudiolandscapes`\n",
-                "\n",
-                "sleep 30\n",
                 "\n",
                 "curl -X 'POST' \\\n",
                 f"  '{url_harbor}/api/v2.0/projects' \\\n",
@@ -587,14 +567,8 @@ def script_harbor_init(
                 "  -H 'Content-Type: application/json' \\\n",
                 "  -d '{\n",
                 "  \"project_name\": \"openstudiolandscapes\",\n",
+                "  \"public\": true\n",
                 "}'\n",
-                # <html>
-                # <head><title>502 Bad Gateway</title></head>
-                # <body>
-                # <center><h1>502 Bad Gateway</h1></center>
-                # <hr><center>nginx</center>
-                # </body>
-                # </html>
             ]
         )
 
@@ -604,20 +578,11 @@ def script_harbor_init(
                 "\n",
                 "# Delete project `library`\n",
                 "\n",
-                "sleep 30\n",
-                "\n",
                 "curl -X 'DELETE' \\\n",
                 f"  '{url_harbor}/api/v2.0/projects/library' \\\n",
                 "  -H 'accept: application/json' \\\n",
                 "  -H 'X-Is-Resource-Name: false' \\\n",
                 f"  -H 'authorization: Basic {base64.b64encode(str(':'.join([username_harbor, password_harbor])).encode('utf-8')).decode('ascii')}'\n",
-                # <html>
-                # <head><title>502 Bad Gateway</title></head>
-                # <body>
-                # <center><h1>502 Bad Gateway</h1></center>
-                # <hr><center>nginx</center>
-                # </body>
-                # </html>
             ]
         )
 
