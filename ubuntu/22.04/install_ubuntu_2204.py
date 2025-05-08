@@ -116,6 +116,14 @@ def script_prep() -> pathlib.Path:
             suffix=".sh",
             mode="x",
     ) as script:
+
+        prep_pkgs = [
+            "openssh-server",
+            "git",
+            "htop",
+            "vim",
+            "graphviz",
+        ]
         script.writelines(
             [
                 "#!/bin/env bash\n",
@@ -124,11 +132,7 @@ def script_prep() -> pathlib.Path:
                 "sudo apt-get update\n",
                 "sudo apt-get upgrade -y\n",
                 "\n",
-                "sudo apt-get install -y openssh-server\n",
-                "sudo apt-get install -y git\n",
-                "sudo apt-get install -y htop\n",
-                "sudo apt-get install -y vim\n",
-                "sudo apt-get install -y graphviz\n",
+                f"sudo apt-get install --no-install-recommends -y {' '.join(prep_pkgs)}\n",
                 "\n",
                 "sudo apt-get -y autoremove\n",
                 "sudo apt-get clean\n",
@@ -260,6 +264,22 @@ def script_install_python(
             ]
         )
 
+        python_pkgs = [
+            "build-essential",
+            "zlib1g-dev",
+            "libncurses5-dev",
+            "libgdbm-dev",
+            "libnss3-dev",
+            "libssl-dev",
+            "libreadline-dev",
+            "libffi-dev",
+            "wget",
+            "pkg-config",
+            "liblzma-dev",
+            "libbz2-dev",
+            "libsqlite3-dev",
+            "curl",
+        ]
         script.writelines(
             [
                 # line 10: [: too many arguments
@@ -268,20 +288,7 @@ def script_install_python(
                 "    sleep 5\n",
                 "done;\n",
                 "\n",
-                "sudo apt-get install -y build-essential\n",
-                "sudo apt-get install -y zlib1g-dev\n",
-                "sudo apt-get install -y libncurses5-dev\n",
-                "sudo apt-get install -y libgdbm-dev\n",
-                "sudo apt-get install -y libnss3-dev\n",
-                "sudo apt-get install -y libssl-dev\n",
-                "sudo apt-get install -y libreadline-dev\n",
-                "sudo apt-get install -y libffi-dev\n",
-                "sudo apt-get install -y wget\n",
-                "sudo apt-get install -y pkg-config\n",
-                "sudo apt-get install -y liblzma-dev\n",
-                "sudo apt-get install -y libbz2-dev\n",
-                "sudo apt-get install -y libsqlite3-dev\n",
-                "sudo apt-get install -y curl\n",
+                f"sudo apt-get install --no-install-recommends -y {' '.join(python_pkgs)}\n",
                 "\n",
                 "pushd \"$(mktemp -d)\" || exit\n",
                 "\n",
@@ -322,6 +329,10 @@ def script_install_docker(
             suffix=".sh",
             mode="x",
     ) as script:
+        docker1_pkgs = [
+            "ca-certificates",
+            "curl",
+        ]
         script.writelines(
             [
                 "#!/bin/env bash\n",
@@ -338,8 +349,7 @@ def script_install_docker(
                 "\n",
                 "sudo apt-get update\n",
                 "\n",
-                "sudo apt-get install -y ca-certificates\n",
-                "sudo apt-get install -y curl\n",
+                f"sudo apt-get install --no-install-recommends -y {' '.join(docker1_pkgs)}\n",
                 "\n",
                 "sudo install -m 0755 -d /etc/apt/keyrings\n",
                 "sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc\n",
@@ -370,6 +380,13 @@ def script_install_docker(
                 ]
             )
 
+        docker_pkgs = [
+            "docker-ce",
+            "docker-ce-cli",
+            "containerd.io",
+            "docker-buildx-plugin",
+            "docker-compose-plugin",
+        ]
         script.writelines(
             [
                 "\n",
@@ -379,11 +396,7 @@ def script_install_docker(
                 "  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null\n",
                 "sudo apt-get update\n",
                 "\n",
-                "sudo apt-get install -y docker-ce\n",
-                "sudo apt-get install -y docker-ce-cli\n",
-                "sudo apt-get install -y containerd.io\n",
-                "sudo apt-get install -y docker-buildx-plugin\n",
-                "sudo apt-get install -y docker-compose-plugin\n",
+                f"sudo apt-get install --no-install-recommends -y {' '.join(docker_pkgs)}\n",
             ]
         )
 
@@ -549,14 +562,11 @@ def script_harbor_prepare(
         return pathlib.Path(script.name)
 
 
-def script_harbor_init(
-    url_harbor: str = "http://harbor.farm.evil:80",
-    username_harbor: str = "admin",
-    password_harbor: str = "Harbor12345",
+def script_harbor_up(
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
-    print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
+    print(" INIT HARBOR UP ".center(_get_terminal_size()[0], "#"))
 
     with tempfile.NamedTemporaryFile(
             delete=False,
@@ -573,13 +583,43 @@ def script_harbor_init(
                 f"cd {openstudiolandscapes_repo_dir.as_posix()}\n",
                 "source .venv/bin/activate\n",
                 "nox --session harbor_up_detach\n",
+                "\n",
+                "nox --session harbor_down\n",
+                "\n",
+                "deactivate\n",
             ]
         )
 
         script.writelines(
             [
                 "\n",
-                "sleep 30\n",
+                "exit 0\n",
+            ]
+        )
+
+        return pathlib.Path(script.name)
+
+
+def script_harbor_init(
+    url_harbor: str = "http://harbor.farm.evil:80",
+    username_harbor: str = "admin",
+    password_harbor: str = "Harbor12345",
+) -> pathlib.Path:
+
+    print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
+
+    with tempfile.NamedTemporaryFile(
+            delete=False,
+            encoding="utf-8",
+            prefix="ubuntu_2204_",
+            suffix=".sh",
+            mode="x",
+    ) as script:
+        script.writelines(
+            [
+                "#!/bin/env bash\n",
+                "\n",
+                "\n",
             ]
         )
 
@@ -618,6 +658,34 @@ def script_harbor_init(
 
         script.writelines(
             [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
+        return pathlib.Path(script.name)
+
+
+def script_harbor_down(
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+) -> pathlib.Path:
+
+    print(" INIT HARBOR DOWN ".center(_get_terminal_size()[0], "#"))
+
+    with tempfile.NamedTemporaryFile(
+            delete=False,
+            encoding="utf-8",
+            prefix="ubuntu_2204_",
+            suffix=".sh",
+            mode="x",
+    ) as script:
+        script.writelines(
+            [
+                "#!/bin/env bash\n",
+                "\n",
+                "\n",
+                f"cd {openstudiolandscapes_repo_dir.as_posix()}\n",
+                "source .venv/bin/activate\n",
                 "\n",
                 "nox --session harbor_down\n",
                 "\n",
@@ -785,9 +853,17 @@ if __name__ == "__main__":
         sudo=False,
         script=script_harbor_prepare(),
     )
+    ret_script_harbor_up = script_run(
+        sudo=False,
+        script=script_harbor_down(),
+    )
     ret_script_harbor_init = script_run(
         sudo=False,
         script=script_harbor_init(),
+    )
+    ret_script_harbor_down = script_run(
+        sudo=False,
+        script=script_harbor_down(),
     )
     # ret_script_init_pihole = script_run(
     #     sudo=False,
