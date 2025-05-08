@@ -39,15 +39,14 @@ def script_run(
 
     with open(script.as_posix(), "r") as f:
         lines = f.readlines()
+        print(" SCRIPT ".center(_get_terminal_size()[0], "-"))
+        print(f" {script.as_posix()} ".center(_get_terminal_size()[0], " "))
         print(" SCRIPT START ".center(_get_terminal_size()[0], "-"))
-        print(f"Script: {script.as_posix()}")
-        # print(f.read())
         lno = 0
         len_ = len(str(len(lines)))
         for l in lines:
             lno += 1
             print(f"{str(lno).ljust(len_)}: {l.rstrip()}")
-        # print(f.read
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
     cmd = [
