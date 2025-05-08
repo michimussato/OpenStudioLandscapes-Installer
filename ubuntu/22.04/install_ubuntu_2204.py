@@ -153,6 +153,13 @@ def script_clone_openstudiolandscapes(
     openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
+    # Todo
+    #  - [ ] We *could* add some checks here in case git clone fails.
+    #        However, ssh authentication is only necessary while repo
+    #        private.
+    #  - [ ] git clone fails silently if ~/git/repos/OpenStudioLandscapes
+    #        already exists. FIX!
+
     print(" CLONE OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
 
     print(" ENTER EMAIL ".center(_get_terminal_size()[0], "="))
@@ -240,6 +247,7 @@ def script_install_python(
 
         script.writelines(
             [
+                # line 10: [: too many arguments
                 "while [ ! sudo apt-get upgrade -y ]; do\n",
                 "    echo \"Update in progress in the background...\"\n",
                 "    sleep 5\n",
@@ -550,6 +558,13 @@ def script_harbor_init(
                 f"cd {openstudiolandscapes_repo_dir.as_posix()}\n",
                 "source .venv/bin/activate\n",
                 "nox --session harbor_up_detach\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "sleep 30\n",
             ]
         )
 
