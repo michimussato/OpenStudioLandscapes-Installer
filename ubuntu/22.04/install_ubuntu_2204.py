@@ -485,7 +485,7 @@ def script_init_harbor(
     url_harbor: str = "http://localhost:80",
     username_harbor: str = "admin",
     password_harbor: str = "Harbor12345",
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
     print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
