@@ -481,7 +481,7 @@ def script_etc_hosts() -> pathlib.Path:
         return pathlib.Path(script.name)
 
 
-def script_init_harbor(
+def script_harbor_prepare(
     url_harbor: str = "http://harbor.farm.evil:80",
     username_harbor: str = "admin",
     password_harbor: str = "Harbor12345",
@@ -505,6 +505,42 @@ def script_init_harbor(
                 f"cd {openstudiolandscapes_repo_dir.as_posix()}\n",
                 "source .venv/bin/activate\n",
                 "nox --session harbor_prepare\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
+        return pathlib.Path(script.name)
+
+
+def script_harbor_init(
+    url_harbor: str = "http://harbor.farm.evil:80",
+    username_harbor: str = "admin",
+    password_harbor: str = "Harbor12345",
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+) -> pathlib.Path:
+
+    print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
+
+    with tempfile.NamedTemporaryFile(
+            delete=False,
+            encoding="utf-8",
+            prefix="ubuntu_2204_",
+            suffix=".sh",
+            mode="x",
+    ) as script:
+        script.writelines(
+            [
+                "#!/bin/env bash\n",
+                "\n",
+                "\n",
+                f"cd {openstudiolandscapes_repo_dir.as_posix()}\n",
+                "source .venv/bin/activate\n",
                 "nox --session harbor_up_detach\n",
             ]
         )
@@ -527,6 +563,7 @@ def script_init_harbor(
         #     ]
         # )
 
+        # Create `openstudiolandscapes` if it does not exist
         script.writelines(
             [
                 "\n",
@@ -553,6 +590,7 @@ def script_init_harbor(
             ]
         )
 
+        # Delete `library` if it does exist
         script.writelines(
             [
                 "\n",
@@ -740,9 +778,13 @@ if __name__ == "__main__":
         sudo=True,
         script=script_etc_hosts(),
     )
-    ret_script_init_harbor = script_run(
+    ret_script_harbor_prepare = script_run(
         sudo=True,
-        script=script_init_harbor(),
+        script=script_harbor_prepare(),
+    )
+    ret_script_harbor_init = script_run(
+        sudo=True,
+        script=script_harbor_init(),
     )
     # ret_script_init_pihole = script_run(
     #     sudo=False,
