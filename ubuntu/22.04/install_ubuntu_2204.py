@@ -19,6 +19,12 @@ from typing import Tuple
 # python3 <(curl --header 'Cache-Control: no-cache, no-store' --silent https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/ubuntu/22.04/install_ubuntu_2204.py)
 
 
+OPENSTUDIOLANDSCAPES_DIR: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser()
+URL_HARBOR: str = "http://harbor.farm.evil:80"
+ADMIN_HARBOR: str = "admin"
+PASSWORD_HARBOR: str = "Harbor12345"
+
+
 def _get_terminal_size() -> Tuple[int, int]:
     # https://stackoverflow.com/a/14422538
     # https://stackoverflow.com/a/18243550
@@ -154,7 +160,7 @@ def script_prep() -> pathlib.Path:
 def script_clone_openstudiolandscapes(
     ssh_key_file: pathlib.Path = pathlib.Path("~/.ssh/id_ed25519").expanduser(),
     known_hosts_file: pathlib.Path = pathlib.Path("~/.ssh/known_hosts").expanduser(),
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
 ) -> pathlib.Path:
 
     # Todo
@@ -317,7 +323,7 @@ def script_install_python(
 def script_install_docker(
     docker_user: str,
     edit_docker_daemon_json: bool = True,
-    url_harbor: str = "http://harbor.farm.evil:80",
+    url_harbor: str = URL_HARBOR,
 ) -> pathlib.Path:
 
     print(" INSTALL DOCKER ".center(_get_terminal_size()[0], "#"))
@@ -437,7 +443,7 @@ def script_install_docker(
 
 
 def script_install_openstudiolandscapes(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
 ) -> pathlib.Path:
 
     print(" INSTALL OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
@@ -525,10 +531,7 @@ def script_etc_hosts() -> pathlib.Path:
 
 
 def script_harbor_prepare(
-    # url_harbor: str = "http://harbor.farm.evil:80",
-    # username_harbor: str = "admin",
-    # password_harbor: str = "Harbor12345",
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
 ) -> pathlib.Path:
 
     print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
@@ -563,7 +566,7 @@ def script_harbor_prepare(
 
 
 def script_harbor_up(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
 ) -> pathlib.Path:
 
     print(" INIT HARBOR UP ".center(_get_terminal_size()[0], "#"))
@@ -599,9 +602,9 @@ def script_harbor_up(
 
 
 def script_harbor_init(
-    url_harbor: str = "http://harbor.farm.evil:80",
-    username_harbor: str = "admin",
-    password_harbor: str = "Harbor12345",
+    url_harbor: str = URL_HARBOR,
+    username_harbor: str = ADMIN_HARBOR,
+    password_harbor: str = PASSWORD_HARBOR,
 ) -> pathlib.Path:
 
     print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
@@ -627,6 +630,8 @@ def script_harbor_init(
                 "\n",
                 "# Create project `openstudiolandscapes`\n",
                 "\n",
+                "sleep 10\n",
+                "\n",
                 "curl -X 'POST' \\\n",
                 f"  '{url_harbor}/api/v2.0/projects' \\\n",
                 "  -H 'accept: application/json' \\\n",
@@ -637,6 +642,8 @@ def script_harbor_init(
                 "  \"project_name\": \"openstudiolandscapes\",\n",
                 "  \"public\": true\n",
                 "}'\n",
+                "\n",
+                "sleep 10\n",
             ]
         )
 
@@ -646,11 +653,15 @@ def script_harbor_init(
                 "\n",
                 "# Delete project `library`\n",
                 "\n",
+                "sleep 10\n",
+                "\n",
                 "curl -X 'DELETE' \\\n",
                 f"  '{url_harbor}/api/v2.0/projects/library' \\\n",
                 "  -H 'accept: application/json' \\\n",
                 "  -H 'X-Is-Resource-Name: false' \\\n",
                 f"  -H 'authorization: Basic {base64.b64encode(str(':'.join([username_harbor, password_harbor])).encode('utf-8')).decode('ascii')}'\n",
+                "\n",
+                "sleep 10\n",
             ]
         )
 
@@ -665,7 +676,7 @@ def script_harbor_init(
 
 
 def script_harbor_down(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
 ) -> pathlib.Path:
 
     print(" INIT HARBOR DOWN ".center(_get_terminal_size()[0], "#"))
@@ -702,7 +713,7 @@ def script_harbor_down(
 
 
 def script_init_pihole(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
 ) -> pathlib.Path:
 
     print(" INIT PI-HOLE ".center(_get_terminal_size()[0], "#"))
@@ -737,7 +748,7 @@ def script_init_pihole(
 
 
 def script_add_alias(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
     bashrc: pathlib.Path = pathlib.Path("~/.bashrc").expanduser(),
     openstudiolandscapesrc: pathlib.Path = pathlib.Path("~/.openstudiolandscapesrc").expanduser(),
 ) -> pathlib.Path:
