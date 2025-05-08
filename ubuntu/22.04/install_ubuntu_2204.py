@@ -779,11 +779,11 @@ if __name__ == "__main__":
         script=script_etc_hosts(),
     )
     ret_script_harbor_prepare = script_run(
-        sudo=True,
+        sudo=False,
         script=script_harbor_prepare(),
     )
     ret_script_harbor_init = script_run(
-        sudo=True,
+        sudo=False,
         script=script_harbor_init(),
     )
     # ret_script_init_pihole = script_run(
