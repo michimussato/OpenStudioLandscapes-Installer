@@ -143,7 +143,7 @@ def script_prep() -> pathlib.Path:
 def script_clone_openstudiolandscapes(
     ssh_key_file: pathlib.Path = pathlib.Path("~/.ssh/id_ed25519").expanduser(),
     known_hosts_file: pathlib.Path = pathlib.Path("~/.ssh/known_hosts").expanduser(),
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
     print(" CLONE OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
@@ -394,7 +394,7 @@ def script_install_docker(
 
 
 def script_install_openstudiolandscapes(
-    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("/").expanduser(),
+    openstudiolandscapes_repo_dir: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser(),
 ) -> pathlib.Path:
 
     print(" INSTALL OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
