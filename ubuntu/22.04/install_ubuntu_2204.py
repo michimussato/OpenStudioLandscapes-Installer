@@ -835,13 +835,13 @@ if __name__ == "__main__":
         if not bool(input_):
             break
         install_dir = pathlib.Path(input_)
-        if not install_dir.exists():
-            print(f"ERROR: Directory {install_dir.as_posix()} does not exist. Create it first.")
-            continue
         if not install_dir.is_absolute():
             print(f"ERROR: Directory {install_dir.as_posix()} is not absolute (~ is allowed).")
             continue
-        if not install_dir.is_dir():
+        if not install_dir.exists():
+            print(f"ERROR: Directory {install_dir.as_posix()} does not exist. Create it first.")
+            continue
+        if install_dir.is_file():
             print(f"ERROR: Install Directory {install_dir.as_posix()} is a file. Cannot continue.")
             continue
         OPENSTUDIOLANDSCAPES_DIR = install_dir
