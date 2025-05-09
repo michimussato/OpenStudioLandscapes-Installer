@@ -861,7 +861,9 @@ if __name__ == "__main__":
     )
     ret_script_clone_openstudiolandscapes = script_run(
         sudo=False,
-        script=script_clone_openstudiolandscapes(),
+        script=script_clone_openstudiolandscapes(
+            openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
+        ),
     )
     ret_script_install_python = script_run(
         sudo=True,
@@ -875,7 +877,9 @@ if __name__ == "__main__":
     )
     ret_script_install_openstudiolandscapes = script_run(
         sudo=False,
-        script=script_install_openstudiolandscapes(),
+        script=script_install_openstudiolandscapes(
+            openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
+        ),
     )
     ret_script_etc_hosts = script_run(
         sudo=True,
@@ -883,11 +887,15 @@ if __name__ == "__main__":
     )
     ret_script_harbor_prepare = script_run(
         sudo=False,
-        script=script_harbor_prepare(),
+        script=script_harbor_prepare(
+            openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
+        ),
     )
     ret_script_harbor_up = script_run(
         sudo=False,
-        script=script_harbor_up(),
+        script=script_harbor_up(
+            openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
+        ),
     )
     ret_script_harbor_init = script_run(
         sudo=False,
@@ -895,7 +903,9 @@ if __name__ == "__main__":
     )
     ret_script_harbor_down = script_run(
         sudo=False,
-        script=script_harbor_down(),
+        script=script_harbor_down(
+            openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
+        ),
     )
     # ret_script_init_pihole = script_run(
     #     sudo=False,
@@ -903,7 +913,9 @@ if __name__ == "__main__":
     # )
     ret_script_add_alias = script_run(
         sudo=False,
-        script=script_add_alias(),
+        script=script_add_alias(
+            openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
+        ),
     )
     ret_script_reboot = script_run(
         sudo=False,
