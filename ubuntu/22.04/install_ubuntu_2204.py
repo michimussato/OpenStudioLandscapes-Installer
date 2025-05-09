@@ -877,6 +877,7 @@ if __name__ == "__main__":
     OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(input() or OPENSTUDIOLANDSCAPES_DIR).expanduser()
 
     print(f"Install Directory is: {OPENSTUDIOLANDSCAPES_DIR.as_posix()}")
+    print("".center(_get_terminal_size()[0], "#"))
 
     ret_script_disable_unattended_upgrades = script_run(
         sudo=True,
