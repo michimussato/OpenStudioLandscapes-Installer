@@ -866,7 +866,7 @@ if __name__ == "__main__":
         default_openstudiolandscapes_base = "~/git/repos"
         default_openstudiolandscapes_subdir = "OpenStudioLandscapes"
 
-        openstudiolandscapes_base = pathlib.Path(input(f"Install base dir ({default_openstudiolandscapes_base}): ".strip()) or default_openstudiolandscapes_base)
+        openstudiolandscapes_base = pathlib.Path(input(f"Install base dir ({default_openstudiolandscapes_base}): ".strip()) or default_openstudiolandscapes_base).expanduser()
 
         if not openstudiolandscapes_base.is_absolute():
             print(f"ERROR: Directory {openstudiolandscapes_base.as_posix()} is not absolute (~ is allowed).")
