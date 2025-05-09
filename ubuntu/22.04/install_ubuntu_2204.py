@@ -858,7 +858,7 @@ if __name__ == "__main__":
         try:
             test_file = pathlib.Path(install_dir.parent / ".test")
             open(pathlib.Path(install_dir.parent / ".test"), 'w').close()
-            os.remove(install_dir.as_posix())
+            os.remove(test_file.as_posix())
         except Exception as e:
             print(f"ERROR: Unable to write to {install_dir.as_posix()}: {e}")
             print(f"Make sure you have write permissions to {install_dir.parent.as_posix()}.")
