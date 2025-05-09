@@ -865,13 +865,16 @@ if __name__ == "__main__":
             probe.mkdir(parents=True, exist_ok=True)
             probe.rmdir()
             del probe
+            break
         except Exception as e:
             print(f"ERROR: Unable to write to {install_dir_base.as_posix()}: {e}")
             print(f"Make sure we have write permissions to `{install_dir_base.as_posix()}` so that we can create the subdirectory `{OPENSTUDIOLANDSCAPES_SUFFIX}`")
             print(f"i.e `sudo chown -R {getuser()}: {install_dir_base.as_posix()}`.")
             continue
 
-        break
+    print(input_)
+    print(input_)
+    print(input_)
 
     if bool(input_):
         OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(install_dir_base, OPENSTUDIOLANDSCAPES_SUFFIX).expanduser()
