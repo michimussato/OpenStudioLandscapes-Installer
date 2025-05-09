@@ -2,6 +2,7 @@
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
 import base64
 import json
+import os
 import shlex
 import shutil
 import subprocess
@@ -853,6 +854,16 @@ if __name__ == "__main__":
         if install_dir.is_file():
             print(f"ERROR: Install Directory {install_dir.as_posix()} is a file. Cannot continue.")
             continue
+
+        try:
+            test_file = pathlib.Path(install_dir.parent / ".test")
+            open(pathlib.Path(install_dir.parent / ".test"), 'w').close()
+            os.remove(install_dir.as_posix())
+        except Exception as e:
+            print(f"ERROR: Unable to write to {install_dir.as_posix()}: {e}")
+            print(f"Make sure you have write permissions to {install_dir.parent.as_posix()}.")
+            continue
+
         OPENSTUDIOLANDSCAPES_DIR = install_dir
         break
 
