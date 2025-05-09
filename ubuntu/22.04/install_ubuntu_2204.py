@@ -835,9 +835,14 @@ if __name__ == "__main__":
         if not bool(input_):
             break
         install_dir = pathlib.Path(input_)
-        if install_dir.resolve().is_dir():
-            OPENSTUDIOLANDSCAPES_DIR = install_dir
-            break
+        if not install_dir.exists():
+            print(f"ERROR: Directory {install_dir.as_posix()} does not exist. Create it first.")
+            continue
+        if not install_dir.is_dir():
+            print(f"ERROR: Install Directory {install_dir.as_posix()} is a file. Cannot continue.")
+            continue
+        OPENSTUDIOLANDSCAPES_DIR = install_dir
+        break
 
     OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(input() or OPENSTUDIOLANDSCAPES_DIR).expanduser()
 
