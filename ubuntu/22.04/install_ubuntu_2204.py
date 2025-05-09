@@ -19,9 +19,9 @@ from typing import Tuple
 # python3 <(curl --header 'Cache-Control: no-cache, no-store' --silent https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/ubuntu/22.04/install_ubuntu_2204.py)
 
 
-OPENSTUDIOLANDSCAPES_BASE: pathlib.Path = pathlib.Path("~/git/repos")
-OPENSTUDIOLANDSCAPES_SUFFIX: str = "OpenStudioLandscapes"
-OPENSTUDIOLANDSCAPES_DIR: pathlib.Path = OPENSTUDIOLANDSCAPES_BASE / OPENSTUDIOLANDSCAPES_SUFFIX
+# OPENSTUDIOLANDSCAPES_BASE: pathlib.Path = pathlib.Path("~/git/repos")
+# OPENSTUDIOLANDSCAPES_SUFFIX: str = "OpenStudioLandscapes"
+# OPENSTUDIOLANDSCAPES_DIR: pathlib.Path = OPENSTUDIOLANDSCAPES_BASE / OPENSTUDIOLANDSCAPES_SUFFIX
 URL_HARBOR: str = "http://harbor.farm.evil:80"
 ADMIN_HARBOR: str = "admin"
 PASSWORD_HARBOR: str = "Harbor12345"
@@ -163,9 +163,9 @@ def script_prep() -> pathlib.Path:
 
 
 def script_clone_openstudiolandscapes(
+    openstudiolandscapes_repo_dir: pathlib.Path,
     ssh_key_file: pathlib.Path = pathlib.Path("~/.ssh/id_ed25519").expanduser(),
     known_hosts_file: pathlib.Path = pathlib.Path("~/.ssh/known_hosts").expanduser(),
-    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
 ) -> pathlib.Path:
 
     # Todo
@@ -449,7 +449,7 @@ def script_install_docker(
 
 
 def script_install_openstudiolandscapes(
-    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
+    openstudiolandscapes_repo_dir: pathlib.Path,
 ) -> pathlib.Path:
 
     print(" INSTALL OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
@@ -537,7 +537,7 @@ def script_etc_hosts() -> pathlib.Path:
 
 
 def script_harbor_prepare(
-    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
+    openstudiolandscapes_repo_dir: pathlib.Path,
 ) -> pathlib.Path:
 
     print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
@@ -572,7 +572,7 @@ def script_harbor_prepare(
 
 
 def script_harbor_up(
-    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
+    openstudiolandscapes_repo_dir: pathlib.Path,
 ) -> pathlib.Path:
 
     print(" INIT HARBOR UP ".center(_get_terminal_size()[0], "#"))
@@ -691,7 +691,7 @@ def script_harbor_init(
 
 
 def script_harbor_down(
-    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
+    openstudiolandscapes_repo_dir: pathlib.Path,
 ) -> pathlib.Path:
 
     print(" INIT HARBOR DOWN ".center(_get_terminal_size()[0], "#"))
@@ -728,7 +728,7 @@ def script_harbor_down(
 
 
 def script_init_pihole(
-    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
+    openstudiolandscapes_repo_dir: pathlib.Path,
 ) -> pathlib.Path:
 
     print(" INIT PI-HOLE ".center(_get_terminal_size()[0], "#"))
@@ -763,7 +763,7 @@ def script_init_pihole(
 
 
 def script_add_alias(
-    openstudiolandscapes_repo_dir: pathlib.Path = OPENSTUDIOLANDSCAPES_DIR,
+    openstudiolandscapes_repo_dir: pathlib.Path,
     bashrc: pathlib.Path = pathlib.Path("~/.bashrc").expanduser(),
     openstudiolandscapesrc: pathlib.Path = pathlib.Path("~/.openstudiolandscapesrc").expanduser(),
 ) -> pathlib.Path:
@@ -842,45 +842,65 @@ def script_reboot() -> pathlib.Path:
 
 
 if __name__ == "__main__":
+    # print(" INSTALL DIRECTORY ".center(_get_terminal_size()[0], "#"))
+    # print("(Press Enter to continue with the defaults)")
+    # default_openstudiolandscapes_base = "~/git/repos"
+    # default_openstudiolandscapes_subdir = "OpenStudioLandscapes"
+    #
+    # openstudiolandscapes_base = input(f"Install base dir ({default_openstudiolandscapes_base}): ".strip()) or default_openstudiolandscapes_base
+    # openstudiolandscapes_subdir = input(f"Install sub dir ({default_openstudiolandscapes_subdir}): ".strip()) or default_openstudiolandscapes_subdir
+    # OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(openstudiolandscapes_base, openstudiolandscapes_subdir).expanduser()
+    #
+    # # openstudiolandscapes_base: str = input("OpenStudiolandscapes base directory: ")
+    # # OPENSTUDIOLANDSCAPES_BASE: pathlib.Path = pathlib.Path("~/git/repos")
+    # # OPENSTUDIOLANDSCAPES_SUFFIX: str = "OpenStudioLandscapes"
+    # # OPENSTUDIOLANDSCAPES_DIR: pathlib.Path = OPENSTUDIOLANDSCAPES_BASE / OPENSTUDIOLANDSCAPES_SUFFIX
+    # print(f"(Press Enter to continue with the default: {OPENSTUDIOLANDSCAPES_BASE.as_posix()})")
+
     print(" INSTALL DIRECTORY ".center(_get_terminal_size()[0], "#"))
-    print(f"Please enter OpenStudiolandscapes base install directory:")
-    print(f"(Press Enter to continue with the default: {OPENSTUDIOLANDSCAPES_BASE.as_posix()})")
-    while True:
-        input_ = input().strip()
-        if not bool(input_):
-            break
-        install_dir_base = pathlib.Path(input_)
-        if not install_dir_base.is_absolute():
-            print(f"ERROR: Directory {install_dir_base.as_posix()} is not absolute (~ is allowed).")
+    print("(Press Enter to continue with the defaults)")
+
+    OPENSTUDIOLANDSCAPES_DIR = None
+
+    while OPENSTUDIOLANDSCAPES_DIR is None:
+        default_openstudiolandscapes_base = "~/git/repos"
+        default_openstudiolandscapes_subdir = "OpenStudioLandscapes"
+
+        openstudiolandscapes_base = pathlib.Path(input(f"Install base dir ({default_openstudiolandscapes_base}): ".strip()) or default_openstudiolandscapes_base)
+
+        if not openstudiolandscapes_base.is_absolute():
+            print(f"ERROR: Directory {openstudiolandscapes_base.as_posix()} is not absolute (~ is allowed).")
             continue
-        if not install_dir_base.exists():
-            print(f"ERROR: Directory {install_dir_base.as_posix()} does not exist. Create it first.")
+        if not openstudiolandscapes_base.exists():
+            print(f"ERROR: Directory {openstudiolandscapes_base.as_posix()} does not exist. Create it first.")
             continue
-        if install_dir_base.is_file():
-            print(f"ERROR: Install Directory {install_dir_base.as_posix()} is a file. Cannot continue.")
+        if openstudiolandscapes_base.is_file():
+            print(f"ERROR: Install Directory {openstudiolandscapes_base.as_posix()} is a file. Cannot continue.")
             continue
 
         try:
-            probe = pathlib.Path(install_dir_base / ".openstudiolandscapes_probe")
+            probe = pathlib.Path(openstudiolandscapes_base / ".openstudiolandscapes_probe")
             probe.mkdir(parents=True, exist_ok=True)
             probe.rmdir()
             del probe
-            break
         except Exception as e:
-            print(f"ERROR: Unable to write to {install_dir_base.as_posix()}: {e}")
-            print(f"Make sure we have write permissions to `{install_dir_base.as_posix()}` so that we can create the subdirectory `{OPENSTUDIOLANDSCAPES_SUFFIX}`")
-            print(f"i.e `sudo chown -R {getuser()}: {install_dir_base.as_posix()}`.")
+            print(f"ERROR: Unable to write to {openstudiolandscapes_base.as_posix()}: {e}")
+            print(f"Make sure we have write permissions to `{openstudiolandscapes_base.as_posix()}` so that we can create a subdirectory.")
+            print(f"i.e `sudo chown -R {getuser()}: {openstudiolandscapes_base.as_posix()}`.")
             continue
 
-    print(input_)
-    print(input_)
-    print(input_)
+        openstudiolandscapes_subdir = input(f"Install sub dir ({default_openstudiolandscapes_subdir}): ".strip()) or default_openstudiolandscapes_subdir
+        # Todo:
+        #  - [ ] Maybe some more checks here
+        OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(openstudiolandscapes_base, openstudiolandscapes_subdir).expanduser()
 
-    if bool(input_):
-        OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(install_dir_base, OPENSTUDIOLANDSCAPES_SUFFIX).expanduser()
-    else:
-        OPENSTUDIOLANDSCAPES_DIR = OPENSTUDIOLANDSCAPES_DIR.expanduser()
 
+    # if bool(input_):
+    #     OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(install_dir_base, OPENSTUDIOLANDSCAPES_SUFFIX).expanduser()
+    # else:
+    #     OPENSTUDIOLANDSCAPES_DIR = OPENSTUDIOLANDSCAPES_DIR.expanduser()
+
+    print("".center(_get_terminal_size()[0], "#"))
     print(f"Install Directory is: {OPENSTUDIOLANDSCAPES_DIR.as_posix()}")
     print("".center(_get_terminal_size()[0], "#"))
 
