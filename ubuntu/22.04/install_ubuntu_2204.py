@@ -858,19 +858,18 @@ if __name__ == "__main__":
             continue
 
         try:
-            test_file = pathlib.Path(install_dir_base / ".openstudiolandscapes_test")
+            test_dir = pathlib.Path(install_dir_base / OPENSTUDIOLANDSCAPES_SUFFIX)
+            test_dir.mkdir(parents=True, exist_ok=True)
+            test_file = pathlib.Path(test_dir / ".openstudiolandscapes_test")
             open(test_file, 'w').close()
             os.remove(test_file.as_posix())
         except Exception as e:
             print(f"ERROR: Unable to write to {install_dir_base.as_posix()}: {e}")
-            print(f"Make sure you have write permissions to {install_dir_base.as_posix()}:")
+            print(f"Make sure we have write permissions to {install_dir_base.as_posix()} so that we can create the subdirectory {OPENSTUDIOLANDSCAPES_SUFFIX}")
             print(f"i.e `sudo chown -R {getuser()}: {install_dir_base.as_posix()}`.")
             continue
 
-        OPENSTUDIOLANDSCAPES_DIR = install_dir_base / OPENSTUDIOLANDSCAPES_SUFFIX
-
-        if not OPENSTUDIOLANDSCAPES_DIR.exists():
-            OPENSTUDIOLANDSCAPES_DIR.mkdir(parents=True, exist_ok=True)
+        OPENSTUDIOLANDSCAPES_DIR = test_dir
 
         break
 
