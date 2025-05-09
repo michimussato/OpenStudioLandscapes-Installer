@@ -861,7 +861,8 @@ if __name__ == "__main__":
             os.remove(test_file.as_posix())
         except Exception as e:
             print(f"ERROR: Unable to write to {install_dir.as_posix()}: {e}")
-            print(f"Make sure you have write permissions to {install_dir.parent.as_posix()}.")
+            print(f"Make sure you have write permissions to {install_dir.parent.as_posix()}:")
+            print(f"i.e `sudo chown -R $USER:$USER {install_dir.parent.as_posix()}`.")
             continue
 
         OPENSTUDIOLANDSCAPES_DIR = install_dir
