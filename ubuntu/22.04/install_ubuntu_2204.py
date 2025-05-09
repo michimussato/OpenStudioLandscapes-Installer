@@ -868,14 +868,12 @@ if __name__ == "__main__":
             print(f"i.e `sudo chown -R {getuser()}: {install_dir_base.as_posix()}`.")
             continue
 
-        # OPENSTUDIOLANDSCAPES_DIR_ = install_dir_base / OPENSTUDIOLANDSCAPES_SUFFIX
-
         break
 
     if not bool(input_):
         OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(OPENSTUDIOLANDSCAPES_SUFFIX, OPENSTUDIOLANDSCAPES_SUFFIX).expanduser()
     else:
-        OPENSTUDIOLANDSCAPES_DIR = install_dir_base / OPENSTUDIOLANDSCAPES_SUFFIX
+        OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(install_dir_base, OPENSTUDIOLANDSCAPES_SUFFIX).expanduser()
 
     print(f"Install Directory is: {OPENSTUDIOLANDSCAPES_DIR.as_posix()}")
     print("".center(_get_terminal_size()[0], "#"))
