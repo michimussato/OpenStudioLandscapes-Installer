@@ -858,7 +858,7 @@ if __name__ == "__main__":
             continue
 
         try:
-            test_file = pathlib.Path(install_dir_base.parent / ".openstudiolandscapes_test")
+            test_file = pathlib.Path(install_dir_base / ".openstudiolandscapes_test")
             open(test_file, 'w').close()
             os.remove(test_file.as_posix())
         except Exception as e:
