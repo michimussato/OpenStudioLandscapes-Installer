@@ -20,7 +20,9 @@ from typing import Tuple
 # python3 <(curl --header 'Cache-Control: no-cache, no-store' --silent https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/ubuntu/22.04/install_ubuntu_2204.py)
 
 
-OPENSTUDIOLANDSCAPES_DIR: pathlib.Path = pathlib.Path("~/git/repos/OpenStudioLandscapes").expanduser()
+OPENSTUDIOLANDSCAPES_BASE: pathlib.Path = pathlib.Path("~/git/repos").expanduser()
+OPENSTUDIOLANDSCAPES_SUFFIX: str = "OpenStudioLandscapes"
+OPENSTUDIOLANDSCAPES_DIR: pathlib.Path = OPENSTUDIOLANDSCAPES_BASE / OPENSTUDIOLANDSCAPES_SUFFIX
 URL_HARBOR: str = "http://harbor.farm.evil:80"
 ADMIN_HARBOR: str = "admin"
 PASSWORD_HARBOR: str = "Harbor12345"
@@ -838,38 +840,37 @@ def script_reboot() -> pathlib.Path:
 
 if __name__ == "__main__":
     print(" INSTALL DIRECTORY ".center(_get_terminal_size()[0], "#"))
-    print(f"Please enter OpenStudiolandscapes install directory:")
-    print(f"(Press Enter to continue with the default: {OPENSTUDIOLANDSCAPES_DIR.as_posix()})")
+    print(f"Please enter OpenStudiolandscapes base install directory:")
+    print(f"(Press Enter to continue with the default: {OPENSTUDIOLANDSCAPES_BASE.as_posix()})")
     while True:
         input_ = input().strip()
         if not bool(input_):
             break
-        install_dir = pathlib.Path(input_)
-        if not install_dir.is_absolute():
-            print(f"ERROR: Directory {install_dir.as_posix()} is not absolute (~ is allowed).")
+        install_dir_base = pathlib.Path(input_)
+        if not install_dir_base.is_absolute():
+            print(f"ERROR: Directory {install_dir_base.as_posix()} is not absolute (~ is allowed).")
             continue
-        if not install_dir.exists():
-            print(f"ERROR: Directory {install_dir.as_posix()} does not exist. Create it first.")
+        if not install_dir_base.exists():
+            print(f"ERROR: Directory {install_dir_base.as_posix()} does not exist. Create it first.")
             continue
-        if install_dir.is_file():
-            print(f"ERROR: Install Directory {install_dir.as_posix()} is a file. Cannot continue.")
+        if install_dir_base.is_file():
+            print(f"ERROR: Install Directory {install_dir_base.as_posix()} is a file. Cannot continue.")
             continue
 
         try:
-            test_file = pathlib.Path(install_dir.parent / ".openstudiolandscapes_test")
+            test_file = pathlib.Path(install_dir_base.parent / ".openstudiolandscapes_test")
             open(test_file, 'w').close()
             os.remove(test_file.as_posix())
         except Exception as e:
-            print(f"ERROR: Unable to write to {install_dir.as_posix()}: {e}")
-            print(f"Make sure you have write permissions to {install_dir.parent.as_posix()}:")
-            print(f"i.e `sudo chown -R {getuser()}: {install_dir.parent.as_posix()}`.")
+            print(f"ERROR: Unable to write to {install_dir_base.as_posix()}: {e}")
+            print(f"Make sure you have write permissions to {install_dir_base.as_posix()}:")
+            print(f"i.e `sudo chown -R {getuser()}: {install_dir_base.as_posix()}`.")
             continue
 
-        OPENSTUDIOLANDSCAPES_DIR = install_dir
+        OPENSTUDIOLANDSCAPES_DIR = install_dir_base / OPENSTUDIOLANDSCAPES_SUFFIX
 
         if not OPENSTUDIOLANDSCAPES_DIR.exists():
-            print(f"ERROR: Directory {OPENSTUDIOLANDSCAPES_DIR.as_posix()} does not exist. Create it first.")
-            continue
+            OPENSTUDIOLANDSCAPES_DIR.mkdir(parents=True, exist_ok=True)
 
         break
 
