@@ -856,7 +856,7 @@ if __name__ == "__main__":
             continue
 
         try:
-            test_file = pathlib.Path(install_dir.parent / ".test")
+            test_file = pathlib.Path(install_dir.parent / ".openstudiolandscapes_test")
             open(test_file, 'w').close()
             os.remove(test_file.as_posix())
         except Exception as e:
@@ -866,6 +866,11 @@ if __name__ == "__main__":
             continue
 
         OPENSTUDIOLANDSCAPES_DIR = install_dir
+
+        if not OPENSTUDIOLANDSCAPES_DIR.exists():
+            print(f"ERROR: Directory {OPENSTUDIOLANDSCAPES_DIR.as_posix()} does not exist. Create it first.")
+            continue
+
         break
 
     OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(input() or OPENSTUDIOLANDSCAPES_DIR).expanduser()
