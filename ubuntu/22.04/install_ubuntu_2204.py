@@ -635,13 +635,15 @@ def script_harbor_init(
         script.writelines(
             [
                 "\n",
-                "# Create project `openstudiolandscapes`\n",
+                "# Create project openstudiolandscapes\n",
                 "\n",
-                "echo \"Giving Harbor some time before performing requests...\n",
+                "echo \"Giving Harbor some time before performing requests...\"\n",
                 f"for i in $(seq {str(sleep_)}); do\n",
-                f"    echo -ne $(({str(sleep_)}-$i+1))\n",
+                # f"    echo -ne $(({str(sleep_)}-$i+1))\n",
+                f"    echo -ne \".\"\n",
                 "    sleep 1\n",
                 "done\n",
+                f"echo -ne \"\n\"\n",
                 "\n",
                 "curl -X 'POST' \\\n",
                 f"  '{url_harbor}/api/v2.0/projects' \\\n",
@@ -654,7 +656,7 @@ def script_harbor_init(
                 "  \"public\": true\n",
                 "}'\n",
                 "\n",
-                "sleep 10\n",
+                # "sleep 10\n",
             ]
         )
 
@@ -662,13 +664,15 @@ def script_harbor_init(
         script.writelines(
             [
                 "\n",
-                "# Delete project `library`\n",
+                "# Delete project library\n",
                 "\n",
-                "echo \"Giving Harbor some spin up time before performing requests...\n",
+                "echo \"Giving Harbor some spin up time before performing requests...\"\n",
                 f"for i in $(seq {str(sleep_)}); do\n",
-                f"    echo -ne $(({str(sleep_)}-$i+1))\n",
+                # f"    echo -ne $(({str(sleep_)}-$i+1))\n",
+                f"    echo -ne \".\"\n",
                 "    sleep 1\n",
                 "done\n",
+                f"echo -ne \"\n\"\n",
                 "\n",
                 "curl -X 'DELETE' \\\n",
                 f"  '{url_harbor}/api/v2.0/projects/library' \\\n",
@@ -676,7 +680,7 @@ def script_harbor_init(
                 "  -H 'X-Is-Resource-Name: false' \\\n",
                 f"  -H 'authorization: Basic {base64.b64encode(str(':'.join([username_harbor, password_harbor])).encode('utf-8')).decode('ascii')}'\n",
                 "\n",
-                "sleep 10\n",
+                # "sleep 10\n",
             ]
         )
 
