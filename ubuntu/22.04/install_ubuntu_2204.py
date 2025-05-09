@@ -827,9 +827,19 @@ def script_reboot() -> pathlib.Path:
 
 
 if __name__ == "__main__":
-    OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(input(
-        f"Please enter OpenStudiolandscapes install directory (default: {OPENSTUDIOLANDSCAPES_DIR.as_posix()}): "
-    ) or OPENSTUDIOLANDSCAPES_DIR).expanduser()
+    print(" INSTALL DIRECTORY ".center(_get_terminal_size()[0], "#"))
+    print(f"Please enter OpenStudiolandscapes install directory:")
+    print(f"(Press Enter to continue with the default: {OPENSTUDIOLANDSCAPES_DIR.as_posix()})")
+    while True:
+        input_ = input()
+        if not bool(input_):
+            break
+        install_dir = pathlib.Path(input_)
+        if install_dir.resolve().is_dir():
+            OPENSTUDIOLANDSCAPES_DIR = install_dir
+            break
+
+    OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(input() or OPENSTUDIOLANDSCAPES_DIR).expanduser()
 
     ret_script_disable_unattended_upgrades = script_run(
         sudo=True,
