@@ -831,7 +831,7 @@ if __name__ == "__main__":
     print(f"Please enter OpenStudiolandscapes install directory:")
     print(f"(Press Enter to continue with the default: {OPENSTUDIOLANDSCAPES_DIR.as_posix()})")
     while True:
-        input_ = input()
+        input_ = input().strip()
         if not bool(input_):
             break
         install_dir = pathlib.Path(input_)
