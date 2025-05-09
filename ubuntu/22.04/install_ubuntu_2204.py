@@ -19,7 +19,7 @@ from typing import Tuple
 # python3 <(curl --header 'Cache-Control: no-cache, no-store' --silent https://raw.githubusercontent.com/michimussato/OpenStudioLandscapes-Temp/refs/heads/main/ubuntu/22.04/install_ubuntu_2204.py)
 
 
-OPENSTUDIOLANDSCAPES_BASE: pathlib.Path = pathlib.Path("~/git/repos").expanduser()
+OPENSTUDIOLANDSCAPES_BASE: pathlib.Path = pathlib.Path("~/git/repos")
 OPENSTUDIOLANDSCAPES_SUFFIX: str = "OpenStudioLandscapes"
 OPENSTUDIOLANDSCAPES_DIR: pathlib.Path = OPENSTUDIOLANDSCAPES_BASE / OPENSTUDIOLANDSCAPES_SUFFIX
 URL_HARBOR: str = "http://harbor.farm.evil:80"
@@ -876,7 +876,7 @@ if __name__ == "__main__":
     if bool(input_):
         OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(install_dir_base, OPENSTUDIOLANDSCAPES_SUFFIX).expanduser()
     else:
-        OPENSTUDIOLANDSCAPES_DIR = OPENSTUDIOLANDSCAPES_DIR
+        OPENSTUDIOLANDSCAPES_DIR = OPENSTUDIOLANDSCAPES_DIR.expanduser()
 
     print(f"Install Directory is: {OPENSTUDIOLANDSCAPES_DIR.as_posix()}")
     print("".center(_get_terminal_size()[0], "#"))
