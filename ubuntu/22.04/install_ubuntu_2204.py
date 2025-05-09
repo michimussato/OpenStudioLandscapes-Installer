@@ -2,7 +2,6 @@
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
 import base64
 import json
-import os
 import shlex
 import shutil
 import subprocess
@@ -36,6 +35,9 @@ def _get_terminal_size() -> Tuple[int, int]:
 
 
 def sudo_pass() -> bytes:
+    # Todo:
+    #  - [ ] Mechanism to verify that sudo password is correct
+    #  - [ ] implement asterisks
     print(" ENTER PASSWORD ".center(_get_terminal_size()[0], "="))
     _sudo_pass = getpass(prompt=f"Sudo Password for User `{getuser()}`: ")
     return _sudo_pass.encode()
@@ -214,6 +216,7 @@ def script_clone_openstudiolandscapes(
             [
                 "\n",
                 f"if [ -d {openstudiolandscapes_repo_dir.as_posix()} ]; then\n",
+                "    echo \"Backing up previous Installation...\"\n",
                 f"    mv {openstudiolandscapes_repo_dir.as_posix()} {openstudiolandscapes_repo_dir.as_posix()}_$(date +\"%Y-%m-%d_%H-%m-%S\")\n",
                 "fi\n",
             ]
@@ -871,9 +874,9 @@ if __name__ == "__main__":
         break
 
     if not bool(input_):
-        OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(OPENSTUDIOLANDSCAPES_SUFFIX, OPENSTUDIOLANDSCAPES_SUFFIX).expanduser()
-    else:
         OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(install_dir_base, OPENSTUDIOLANDSCAPES_SUFFIX).expanduser()
+    else:
+        OPENSTUDIOLANDSCAPES_DIR = OPENSTUDIOLANDSCAPES_DIR
 
     print(f"Install Directory is: {OPENSTUDIOLANDSCAPES_DIR.as_posix()}")
     print("".center(_get_terminal_size()[0], "#"))
