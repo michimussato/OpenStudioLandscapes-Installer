@@ -873,7 +873,7 @@ if __name__ == "__main__":
 
         break
 
-    if not bool(input_):
+    if bool(input_):
         OPENSTUDIOLANDSCAPES_DIR = pathlib.Path(install_dir_base, OPENSTUDIOLANDSCAPES_SUFFIX).expanduser()
     else:
         OPENSTUDIOLANDSCAPES_DIR = OPENSTUDIOLANDSCAPES_DIR
