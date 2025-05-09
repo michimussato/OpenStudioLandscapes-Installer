@@ -624,13 +624,18 @@ def script_harbor_init(
             ]
         )
 
+        sleep_ = 10
         # Create `openstudiolandscapes` if it does not exist
         script.writelines(
             [
                 "\n",
                 "# Create project `openstudiolandscapes`\n",
                 "\n",
-                "sleep 10\n",
+                "echo \"Giving Harbor some time before performing requests...\n",
+                f"for i in $(seq {str(sleep_)}); do\n",
+                f"    echo -ne $(seq $(({str(sleep_)}-$i)))\n",
+                "    sleep 1\n",
+                "done\n",
                 "\n",
                 "curl -X 'POST' \\\n",
                 f"  '{url_harbor}/api/v2.0/projects' \\\n",
@@ -653,7 +658,11 @@ def script_harbor_init(
                 "\n",
                 "# Delete project `library`\n",
                 "\n",
-                "sleep 10\n",
+                "echo \"Giving Harbor some time before performing requests...\n",
+                f"for i in $(seq {str(sleep_)}); do\n",
+                f"    echo -ne $(seq $(({str(sleep_)}-$i)))\n",
+                "    sleep 1\n",
+                "done\n",
                 "\n",
                 "curl -X 'DELETE' \\\n",
                 f"  '{url_harbor}/api/v2.0/projects/library' \\\n",
