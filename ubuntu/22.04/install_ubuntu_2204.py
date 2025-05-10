@@ -87,10 +87,10 @@ def script_run(
         #     print(f.read())
         raise e
 
-    if proc.returncode:
-        raise RuntimeError(proc)
-
-    return proc.stdout, proc.stderr
+    # if proc.returncode:
+    #     raise RuntimeError(proc)
+    #
+    # return proc.stdout, proc.stderr
 
 
 def script_disable_unattended_upgrades() -> pathlib.Path:
