@@ -648,7 +648,7 @@ def script_harbor_init(
                 "\n",
                 "# Delete project library\n",
                 "\n",
-                "echo \"Giving Harbor some spin up time before performing requests...\"\n",
+                "echo \"Giving Harbor some time before performing requests...\"\n",
                 f"for i in $(seq {str(sleep_)}); do\n",
                 # f"    echo -ne $(({str(sleep_)}-$i+1))\n",
                 f"    echo -ne \".\"\n",
