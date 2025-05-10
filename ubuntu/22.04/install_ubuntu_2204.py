@@ -28,6 +28,9 @@ ADMIN_HARBOR: str = "admin"
 PASSWORD_HARBOR: str = "Harbor12345"
 
 
+SHELL_SCRIPTS_PREFIX = "ubuntu_2204__"
+
+
 def _get_terminal_size() -> Tuple[int, int]:
     # https://stackoverflow.com/a/14422538
     # https://stackoverflow.com/a/18243550
@@ -74,7 +77,7 @@ def script_disable_unattended_upgrades() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -102,7 +105,7 @@ def script_prep() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -162,7 +165,7 @@ def script_clone_openstudiolandscapes(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -232,7 +235,7 @@ def script_install_python(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -316,7 +319,7 @@ def script_install_docker(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -436,7 +439,7 @@ def script_install_openstudiolandscapes(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -477,7 +480,7 @@ def script_etc_hosts() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -524,7 +527,7 @@ def script_harbor_prepare(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -559,7 +562,7 @@ def script_harbor_up(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -597,7 +600,7 @@ def script_harbor_init(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -682,7 +685,7 @@ def script_harbor_down(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -719,7 +722,7 @@ def script_init_pihole(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -756,7 +759,7 @@ def script_add_alias(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -798,7 +801,7 @@ def script_reboot() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -887,73 +890,73 @@ if __name__ == "__main__":
     print(f"Install Directory is: {OPENSTUDIOLANDSCAPES_DIR.as_posix()}")
     print("".center(_get_terminal_size()[0], "#"))
 
-    ret_script_disable_unattended_upgrades = script_run(
+    script_run(
         sudo=True,
         script=script_disable_unattended_upgrades(),
     )
-    ret_script_prep = script_run(
+    script_run(
         sudo=True,
         script=script_prep(),
     )
-    ret_script_clone_openstudiolandscapes = script_run(
+    script_run(
         sudo=False,
         script=script_clone_openstudiolandscapes(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    ret_script_install_python = script_run(
+    script_run(
         sudo=True,
         script=script_install_python(),
     )
-    ret_script_install_docker = script_run(
+    script_run(
         sudo=True,
         script=script_install_docker(
             docker_user=getuser(),
         ),
     )
-    ret_script_install_openstudiolandscapes = script_run(
+    script_run(
         sudo=False,
         script=script_install_openstudiolandscapes(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    ret_script_etc_hosts = script_run(
+    script_run(
         sudo=True,
         script=script_etc_hosts(),
     )
-    ret_script_harbor_prepare = script_run(
+    script_run(
         sudo=False,
         script=script_harbor_prepare(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    ret_script_harbor_up = script_run(
+    script_run(
         sudo=False,
         script=script_harbor_up(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    ret_script_harbor_init = script_run(
+    script_run(
         sudo=False,
         script=script_harbor_init(),
     )
-    ret_script_harbor_down = script_run(
+    script_run(
         sudo=False,
         script=script_harbor_down(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    # ret_script_init_pihole = script_run(
+    # script_run(
     #     sudo=False,
     #     script=script_init_pihole(),
     # )
-    ret_script_add_alias = script_run(
+    script_run(
         sudo=False,
         script=script_add_alias(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    ret_script_reboot = script_run(
+    script_run(
         sudo=False,
         script=script_reboot(),
     )
