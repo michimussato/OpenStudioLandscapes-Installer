@@ -9,6 +9,8 @@ import tempfile
 import pathlib
 from getpass import getpass, getuser
 from typing import Tuple
+import pty
+# import ptyprocess.ptyprocess
 
 
 # Requirements:
@@ -71,13 +73,14 @@ def script_run(
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
     try:
-        proc = subprocess.run(
-            cmd,
-            input=None if not sudo else sudo_pass(),
-            check=True,
-            # cwd=script_prep.parent.as_posix(),
-            # env=os.environ,
-        )
+        pty.spawn(cmd)
+        # proc = subprocess.run(
+        #     cmd,
+        #     input=None if not sudo else sudo_pass(),
+        #     check=True,
+        #     # cwd=script_prep.parent.as_posix(),
+        #     # env=os.environ,
+        # )
     except subprocess.CalledProcessError as e:
         print(cmd)
         # with open(script.as_posix(), "r") as f:
