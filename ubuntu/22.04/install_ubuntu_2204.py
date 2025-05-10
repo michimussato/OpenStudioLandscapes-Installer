@@ -843,7 +843,7 @@ def script_initial_checks() -> pathlib.Path:
                 "#!/bin/env bash\n",
                 "\n",
                 "\n",
-                "if [ docker ps | grep \"goharbor/\" ]; do\n",
+                "if [ docker ps | grep \"goharbor/\" ]; then\n",
                 "    echo \"Docker Container Harbor is running.\"\n",
                 "    echo \"It is not advisable to perform this installation\"\n",
                 "    echo \"while Harbor is running.\"\n",
