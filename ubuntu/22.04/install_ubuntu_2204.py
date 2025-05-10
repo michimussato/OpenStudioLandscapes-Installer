@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
 import base64
+import os
+import threading
+import sys
 import json
 import shlex
 import shutil
@@ -8,8 +11,7 @@ import subprocess
 import tempfile
 import pathlib
 from getpass import getpass, getuser
-from typing import Tuple
-
+from typing import Tuple, List
 
 # Requirements:
 # - python3
@@ -25,6 +27,49 @@ from typing import Tuple
 URL_HARBOR: str = "http://harbor.farm.evil:80"
 ADMIN_HARBOR: str = "admin"
 PASSWORD_HARBOR: str = "Harbor12345"
+
+
+SHELL_SCRIPTS_PREFIX: str = "ubuntu_desktop_2204__"
+
+
+class LocalShell(object):
+    # shell = LocalShell()
+    # shell.run(cmd)
+    # def __init__(self):
+    #     pass
+
+    @classmethod
+    def run(cls, cmd: List[str]):
+        env = os.environ.copy()
+        p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, env=env)
+        sys.stdout.write("Started Local Terminal...\r\n\r\n")
+
+        def writeall(p):
+            while True:
+                # print("read data: ")
+                data = p.stdout.read(1).decode("utf-8")
+                if not data:
+                    break
+                sys.stdout.write(data)
+                sys.stdout.flush()
+
+        writer = threading.Thread(target=writeall, args=(p,))
+        writer.start()
+
+        try:
+            while True:
+                d = sys.stdin.read(1)
+                if not d:
+                    break
+                cls._write(p, d.encode())
+
+        except EOFError as e:
+            print(e)
+
+    @staticmethod
+    def _write(process, message):
+        process.stdin.write(message)
+        process.stdin.flush()
 
 
 def _get_terminal_size() -> Tuple[int, int]:
@@ -47,7 +92,7 @@ def script_run(
     sudo: bool = False,
     *,
     script: pathlib.Path,
-) -> tuple[bytes, bytes]:
+) -> Tuple[bytes, bytes]:
 
     cmd = [
         shutil.which("bash"),
@@ -57,6 +102,7 @@ def script_run(
     if sudo:
         cmd.insert(0, shutil.which("sudo"))
         cmd.insert(1, "--stdin")
+        cmd.insert(2, "--reset-timestamp")
 
     with open(script.as_posix(), "r") as f:
         lines = f.readlines()
@@ -69,6 +115,8 @@ def script_run(
             lno += 1
             print(f"{str(lno).ljust(len_)}: {l.rstrip()}")
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
+
+    LocalShell().run(cmd)
 
     try:
         proc = subprocess.run(
@@ -95,7 +143,7 @@ def script_disable_unattended_upgrades() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -123,7 +171,7 @@ def script_prep() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -183,7 +231,7 @@ def script_clone_openstudiolandscapes(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -253,7 +301,7 @@ def script_install_python(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -337,7 +385,7 @@ def script_install_docker(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -457,7 +505,7 @@ def script_install_openstudiolandscapes(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -498,7 +546,7 @@ def script_etc_hosts() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -545,7 +593,7 @@ def script_harbor_prepare(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -580,7 +628,7 @@ def script_harbor_up(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -618,7 +666,7 @@ def script_harbor_init(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -703,7 +751,7 @@ def script_harbor_down(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -740,7 +788,7 @@ def script_init_pihole(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -777,7 +825,7 @@ def script_add_alias(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
@@ -819,7 +867,7 @@ def script_reboot() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix="ubuntu_2204_",
+            prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
     ) as script:
