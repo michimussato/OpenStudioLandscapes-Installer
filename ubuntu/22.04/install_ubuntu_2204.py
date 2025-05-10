@@ -6,7 +6,7 @@ import shlex
 import shutil
 import tempfile
 import pathlib
-from getpass import getpass, getuser
+from getpass import getuser
 from typing import Tuple
 import pty
 # import ptyprocess.ptyprocess
