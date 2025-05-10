@@ -827,6 +827,43 @@ def script_reboot() -> pathlib.Path:
         return pathlib.Path(script.name)
 
 
+def script_init() -> None:
+
+    print(" INITIAL CHECKS ".center(_get_terminal_size()[0], "#"))
+
+    with tempfile.NamedTemporaryFile(
+            delete=False,
+            encoding="utf-8",
+            prefix=SHELL_SCRIPTS_PREFIX,
+            suffix=".sh",
+            mode="x",
+    ) as script:
+        script.writelines(
+            [
+                "#!/bin/env bash\n",
+                "\n",
+                "\n",
+                "if [ docker ps | grep \"goharbor/\" ]; do\n",
+                "    echo \"Docker Container Harbor is running.\"\n",
+                "    echo \"It is not advisable to perform this installation\"\n",
+                "    echo \"while Harbor is running.\"\n",
+                "    echo \"Stop the containers and re-run the installer.\"\n",
+                "    exit 1\n",
+                "fi\n",
+                "\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
+        return None
+
+
 if __name__ == "__main__":
     # print(" INSTALL DIRECTORY ".center(_get_terminal_size()[0], "#"))
     # print("(Press Enter to continue with the defaults)")
@@ -842,6 +879,14 @@ if __name__ == "__main__":
     # # OPENSTUDIOLANDSCAPES_SUFFIX: str = "OpenStudioLandscapes"
     # # OPENSTUDIOLANDSCAPES_DIR: pathlib.Path = OPENSTUDIOLANDSCAPES_BASE / OPENSTUDIOLANDSCAPES_SUFFIX
     # print(f"(Press Enter to continue with the default: {OPENSTUDIOLANDSCAPES_BASE.as_posix()})")
+
+    print("".center(_get_terminal_size()[0], "#"))
+    print(" OPENSTUDIOLANDSCAPES INSTALLER ".center(_get_terminal_size()[0], "#"))
+
+    script_run(
+        sudo=False,
+        script=script_init(),
+    )
 
     print(" INSTALL DIRECTORY ".center(_get_terminal_size()[0], "#"))
     print("(Press Enter to continue with the defaults)")
