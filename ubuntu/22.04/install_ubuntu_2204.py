@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
 import base64
-import os
-import threading
-import sys
 import json
 import shlex
 import shutil
@@ -11,7 +8,8 @@ import subprocess
 import tempfile
 import pathlib
 from getpass import getpass, getuser
-from typing import Tuple, List
+from typing import Tuple
+
 
 # Requirements:
 # - python3
@@ -27,67 +25,6 @@ from typing import Tuple, List
 URL_HARBOR: str = "http://harbor.farm.evil:80"
 ADMIN_HARBOR: str = "admin"
 PASSWORD_HARBOR: str = "Harbor12345"
-
-
-SHELL_SCRIPTS_PREFIX: str = "ubuntu_desktop_2204__"
-
-
-class LocalShell(object):
-    # shell = LocalShell()
-    # shell.run(cmd)
-    # def __init__(self):
-    #     pass
-
-    @classmethod
-    def run(cls, cmd: List[str]) -> None:
-        env = os.environ.copy()
-        p = subprocess.Popen(
-            cmd,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=False,
-            env=env,
-        )
-        sys.stdout.write("Started Local Terminal...\r\n\r\n")
-
-        def writeall(p):
-            while True:
-                # print("read data: ")
-                data = p.stdout.read(1).decode("utf-8")
-                if not data:
-                    break
-                sys.stdout.write(data)
-                sys.stdout.flush()
-
-        writer = threading.Thread(target=writeall, args=(p,))
-        writer.start()
-        writer.join()
-
-        try:
-            while True:
-                if p.poll() is not None:
-                    sys.stdout.write("Process finished.\n")
-                    break
-                d = sys.stdin.read(1)
-                # if not d:
-                #     break
-                cls._write(p, d.encode())
-
-            return None
-
-        except EOFError as e:
-            print(e)
-
-    @staticmethod
-    def _write(process, message):
-        process.stdin.write(message)
-        process.stdin.flush()
-
-    @staticmethod
-    def _write(process, message):
-        process.stdin.write(message)
-        process.stdin.flush()
 
 
 def _get_terminal_size() -> Tuple[int, int]:
@@ -110,7 +47,7 @@ def script_run(
     sudo: bool = False,
     *,
     script: pathlib.Path,
-) -> None:
+) -> tuple[bytes, bytes]:
 
     cmd = [
         shutil.which("bash"),
@@ -119,8 +56,7 @@ def script_run(
 
     if sudo:
         cmd.insert(0, shutil.which("sudo"))
-        # cmd.insert(1, "--stdin")
-        cmd.insert(1, "--reset-timestamp")
+        cmd.insert(1, "--stdin")
 
     with open(script.as_posix(), "r") as f:
         lines = f.readlines()
@@ -134,26 +70,24 @@ def script_run(
             print(f"{str(lno).ljust(len_)}: {l.rstrip()}")
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
-    LocalShell().run(cmd)
+    try:
+        proc = subprocess.run(
+            cmd,
+            input=None if not sudo else sudo_pass(),
+            check=True,
+            # cwd=script_prep.parent.as_posix(),
+            # env=os.environ,
+        )
+    except subprocess.CalledProcessError as e:
+        print(cmd)
+        # with open(script.as_posix(), "r") as f:
+        #     print(f.read())
+        raise e
 
-    # try:
-    #     proc = subprocess.run(
-    #         cmd,
-    #         input=None if not sudo else sudo_pass(),
-    #         check=True,
-    #         # cwd=script_prep.parent.as_posix(),
-    #         # env=os.environ,
-    #     )
-    # except subprocess.CalledProcessError as e:
-    #     print(cmd)
-    #     # with open(script.as_posix(), "r") as f:
-    #     #     print(f.read())
-    #     raise e
+    if proc.returncode:
+        raise RuntimeError(proc)
 
-    # if result:
-    #     raise RuntimeError(proc)
-    #
-    # return proc.stdout, proc.stderr
+    return proc.stdout, proc.stderr
 
 
 def script_disable_unattended_upgrades() -> pathlib.Path:
@@ -161,7 +95,7 @@ def script_disable_unattended_upgrades() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -189,7 +123,7 @@ def script_prep() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -249,7 +183,7 @@ def script_clone_openstudiolandscapes(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -319,7 +253,7 @@ def script_install_python(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -403,7 +337,7 @@ def script_install_docker(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -523,7 +457,7 @@ def script_install_openstudiolandscapes(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -564,7 +498,7 @@ def script_etc_hosts() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -611,7 +545,7 @@ def script_harbor_prepare(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -646,7 +580,7 @@ def script_harbor_up(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -684,7 +618,7 @@ def script_harbor_init(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -769,7 +703,7 @@ def script_harbor_down(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -806,7 +740,7 @@ def script_init_pihole(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -843,7 +777,7 @@ def script_add_alias(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -885,7 +819,7 @@ def script_reboot() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix="ubuntu_2204_",
             suffix=".sh",
             mode="x",
     ) as script:
