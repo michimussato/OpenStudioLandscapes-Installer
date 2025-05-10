@@ -72,26 +72,11 @@ def script_run(
             print(f"{str(lno).ljust(len_)}: {l.rstrip()}")
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
-    try:
-        # We want all command executions to be fully interactive
-        pty.spawn(cmd)
-        # proc = subprocess.run(
-        #     cmd,
-        #     input=None if not sudo else sudo_pass(),
-        #     check=True,
-        #     # cwd=script_prep.parent.as_posix(),
-        #     # env=os.environ,
-        # )
-    except subprocess.CalledProcessError as e:
-        print(cmd)
-        # with open(script.as_posix(), "r") as f:
-        #     print(f.read())
-        raise e
-
-    # if proc.returncode:
-    #     raise RuntimeError(proc)
-    #
-    # return proc.stdout, proc.stderr
+    # We want all command executions to be fully interactive,
+    # hence, subprocess.run got me close but is not the best solution
+    # when it comes to user input like passwords or other
+    # arbitrary data.
+    pty.spawn(cmd)
 
 
 def script_disable_unattended_upgrades() -> pathlib.Path:
