@@ -73,6 +73,7 @@ def script_run(
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
     try:
+        # We want all command executions to be fully interactive
         pty.spawn(cmd)
         # proc = subprocess.run(
         #     cmd,
