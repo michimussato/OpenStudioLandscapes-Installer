@@ -848,6 +848,7 @@ def script_initial_checks() -> pathlib.Path:
                 "    echo \"It is not advisable to perform this installation while Harbor is running.\"\n",
                 "    echo\n",
                 "    echo \"Stop the containers and re-run the installer.\"\n",
+                "    echo \"Run `docker stop $(docker ps -q)` to stop all running containers.\"\n",
                 "    echo\n",
                 "    exit 1\n",
                 "fi\n",
