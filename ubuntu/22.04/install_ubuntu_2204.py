@@ -39,9 +39,16 @@ class LocalShell(object):
     #     pass
 
     @classmethod
-    def run(cls, cmd: List[str]):
+    def run(cls, cmd: List[str]) -> None:
         env = os.environ.copy()
-        p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, env=env)
+        p = subprocess.Popen(
+            cmd,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=False,
+            env=env,
+        )
         sys.stdout.write("Started Local Terminal...\r\n\r\n")
 
         def writeall(p):
@@ -55,16 +62,27 @@ class LocalShell(object):
 
         writer = threading.Thread(target=writeall, args=(p,))
         writer.start()
+        writer.join()
 
         try:
             while True:
-                d = sys.stdin.read(1)
-                if not d:
+                if p.poll() is not None:
+                    sys.stdout.write("Process finished.\n")
                     break
+                d = sys.stdin.read(1)
+                # if not d:
+                #     break
                 cls._write(p, d.encode())
+
+            return None
 
         except EOFError as e:
             print(e)
+
+    @staticmethod
+    def _write(process, message):
+        process.stdin.write(message)
+        process.stdin.flush()
 
     @staticmethod
     def _write(process, message):
@@ -92,7 +110,7 @@ def script_run(
     sudo: bool = False,
     *,
     script: pathlib.Path,
-) -> Tuple[bytes, bytes]:
+) -> None:
 
     cmd = [
         shutil.which("bash"),
@@ -101,8 +119,8 @@ def script_run(
 
     if sudo:
         cmd.insert(0, shutil.which("sudo"))
-        cmd.insert(1, "--stdin")
-        cmd.insert(2, "--reset-timestamp")
+        # cmd.insert(1, "--stdin")
+        cmd.insert(1, "--reset-timestamp")
 
     with open(script.as_posix(), "r") as f:
         lines = f.readlines()
@@ -118,24 +136,24 @@ def script_run(
 
     LocalShell().run(cmd)
 
-    try:
-        proc = subprocess.run(
-            cmd,
-            input=None if not sudo else sudo_pass(),
-            check=True,
-            # cwd=script_prep.parent.as_posix(),
-            # env=os.environ,
-        )
-    except subprocess.CalledProcessError as e:
-        print(cmd)
-        # with open(script.as_posix(), "r") as f:
-        #     print(f.read())
-        raise e
+    # try:
+    #     proc = subprocess.run(
+    #         cmd,
+    #         input=None if not sudo else sudo_pass(),
+    #         check=True,
+    #         # cwd=script_prep.parent.as_posix(),
+    #         # env=os.environ,
+    #     )
+    # except subprocess.CalledProcessError as e:
+    #     print(cmd)
+    #     # with open(script.as_posix(), "r") as f:
+    #     #     print(f.read())
+    #     raise e
 
-    if proc.returncode:
-        raise RuntimeError(proc)
-
-    return proc.stdout, proc.stderr
+    # if result:
+    #     raise RuntimeError(proc)
+    #
+    # return proc.stdout, proc.stderr
 
 
 def script_disable_unattended_upgrades() -> pathlib.Path:
