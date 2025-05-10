@@ -827,7 +827,7 @@ def script_reboot() -> pathlib.Path:
         return pathlib.Path(script.name)
 
 
-def script_init() -> None:
+def script_init() -> pathlib.Path:
 
     print(" INITIAL CHECKS ".center(_get_terminal_size()[0], "#"))
 
@@ -861,7 +861,7 @@ def script_init() -> None:
             ]
         )
 
-        return None
+        return pathlib.Path(script.name)
 
 
 if __name__ == "__main__":
@@ -885,7 +885,7 @@ if __name__ == "__main__":
 
     script_run(
         sudo=False,
-        script=script_init(),
+        script=script_disable_unattended_upgrades(),
     )
 
     print(" INSTALL DIRECTORY ".center(_get_terminal_size()[0], "#"))
