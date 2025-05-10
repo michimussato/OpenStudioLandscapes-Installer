@@ -4,7 +4,6 @@ import base64
 import json
 import shlex
 import shutil
-import subprocess
 import tempfile
 import pathlib
 from getpass import getpass, getuser
@@ -36,20 +35,11 @@ def _get_terminal_size() -> Tuple[int, int]:
     return cols, rows
 
 
-def sudo_pass() -> bytes:
-    # Todo:
-    #  - [ ] Mechanism to verify that sudo password is correct
-    #  - [ ] implement asterisks
-    print(" ENTER PASSWORD ".center(_get_terminal_size()[0], "="))
-    _sudo_pass = getpass(prompt=f"Sudo Password for User `{getuser()}`: ")
-    return _sudo_pass.encode()
-
-
 def script_run(
     sudo: bool = False,
     *,
     script: pathlib.Path,
-) -> tuple[bytes, bytes]:
+) -> None:
 
     cmd = [
         shutil.which("bash"),
@@ -58,7 +48,7 @@ def script_run(
 
     if sudo:
         cmd.insert(0, shutil.which("sudo"))
-        cmd.insert(1, "--stdin")
+        # cmd.insert(1, "--stdin")
 
     with open(script.as_posix(), "r") as f:
         lines = f.readlines()
