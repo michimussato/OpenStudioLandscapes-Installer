@@ -851,6 +851,8 @@ def script_initial_checks() -> pathlib.Path:
                 "    echo \"Run `docker stop $(docker ps -q)` to stop all running containers.\"\n",
                 "    echo\n",
                 "    exit 1\n",
+                "else\n",
+                "    echo \"Looking good! Let's go...\"\n",
                 "fi\n",
                 "\n",
             ]
