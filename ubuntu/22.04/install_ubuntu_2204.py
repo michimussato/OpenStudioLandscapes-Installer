@@ -779,6 +779,7 @@ def script_add_alias(
                 "# ~/.openstudiolandscapesrc\n",
                 f"alias openstudiolandscapes-up=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions harbor_up_detach dagster_postgres_up_detach dagster_postgres && deactivate && popd\"\n",
                 f"alias openstudiolandscapes-down=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions dagster_postgres_down harbor_down && deactivate && popd\"\n",
+                f"alias openstudiolandscapes=\"openstudiolandscapes-up; openstudiolandscapes-down;\"\n",
                 "\n",
                 "EOF\n",
             ]
