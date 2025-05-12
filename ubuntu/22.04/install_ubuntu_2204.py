@@ -32,6 +32,18 @@ PASSWORD_HARBOR: str = "Harbor12345"
 SHELL_SCRIPTS_PREFIX = "ubuntu_2204__"
 
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 def _get_terminal_size() -> Tuple[int, int]:
     # https://stackoverflow.com/a/14422538
     # https://stackoverflow.com/a/18243550
@@ -61,9 +73,11 @@ def script_run(
         print(" SCRIPT START ".center(_get_terminal_size()[0], "-"))
         lno = 0
         len_ = len(str(len(lines)))
+        print(bcolors.OKCYAN)
         for l in lines:
             lno += 1
             print(f"{str(lno).ljust(len_)}: {l.rstrip()}")
+        print(bcolors.ENDC)
         print(" SCRIPT END ".center(_get_terminal_size()[0], "-"))
 
     # We want all command executions to be fully interactive,
@@ -72,7 +86,10 @@ def script_run(
     # arbitrary data.
     result = pty.spawn(cmd)
     print(" RETURN CODE ".center(_get_terminal_size()[0], "-"))
-    print(f"Return Code = {result}")
+    if result == 0:
+        print(bcolors.OKGREEN + f"Return Code = {result}" + bcolors.ENDC)
+    else:
+        print(bcolors.FAIL + f"Return Code = {result}" + bcolors.ENDC)
 
     return result
 
