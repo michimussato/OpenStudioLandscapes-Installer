@@ -4,6 +4,7 @@ import base64
 import json
 import shlex
 import shutil
+import sys
 import tempfile
 import pathlib
 from getpass import getuser
@@ -42,7 +43,7 @@ def script_run(
     sudo: bool = False,
     *,
     script: pathlib.Path,
-) -> None:
+) -> int:
 
     cmd = [
         shutil.which("bash"),
@@ -69,7 +70,10 @@ def script_run(
     # hence, subprocess.run got me close but is not the best solution
     # when it comes to user input like passwords or other
     # arbitrary data.
-    pty.spawn(cmd)
+    result = pty.spawn(cmd)
+    print(f"Return Code = {result}")
+
+    return result
 
 
 def script_disable_unattended_upgrades() -> pathlib.Path:
@@ -946,74 +950,130 @@ if __name__ == "__main__":
     print(f"Install Directory is: {OPENSTUDIOLANDSCAPES_DIR.as_posix()}")
     print("".center(_get_terminal_size()[0], "#"))
 
-    script_run(
+    result = script_run(
         sudo=True,
         script=script_disable_unattended_upgrades(),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=True,
         script=script_prep(),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=False,
         script=script_clone_openstudiolandscapes(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=True,
         script=script_install_python(),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=True,
         script=script_install_docker(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
             docker_user=getuser(),
         ),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=False,
         script=script_install_openstudiolandscapes(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=True,
         script=script_etc_hosts(),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=False,
         script=script_harbor_prepare(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=False,
         script=script_harbor_up(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=False,
         script=script_harbor_init(),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=False,
         script=script_harbor_down(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    # script_run(
+
+    if result:
+        sys.exit(1)
+
+    # result = script_run(
     #     sudo=False,
     #     script=script_init_pihole(),
     # )
-    script_run(
+    #
+    # if result:
+    #     sys.exit(1)
+
+    result = script_run(
         sudo=False,
         script=script_add_alias(
             openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
         ),
     )
-    script_run(
+
+    if result:
+        sys.exit(1)
+
+    result = script_run(
         sudo=False,
         script=script_reboot(),
     )
+
+    if result:
+        sys.exit(1)
+
