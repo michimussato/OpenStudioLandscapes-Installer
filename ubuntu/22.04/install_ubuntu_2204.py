@@ -71,6 +71,7 @@ def script_run(
     # when it comes to user input like passwords or other
     # arbitrary data.
     result = pty.spawn(cmd)
+    print(" RETURN CODE ".center(_get_terminal_size()[0], "-"))
     print(f"Return Code = {result}")
 
     return result
@@ -421,7 +422,7 @@ def script_install_docker(
                 "sudo systemctl restart docker\n",
                 "\n",
                 f"sudo rm -rf {pathlib.Path(openstudiolandscapes_repo_dir, '.landscapes', '.harbor', 'bin').as_posix()}/*\n",
-                f"sudo rm -rf {pathlib.Path(openstudiolandscapes_repo_dir, '.landscapes', '.harbor', 'data').as_posix()}/\n*",
+                f"sudo rm -rf {pathlib.Path(openstudiolandscapes_repo_dir, '.landscapes', '.harbor', 'data').as_posix()}/*\n*",
             ]
         )
 
