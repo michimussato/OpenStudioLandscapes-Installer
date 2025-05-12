@@ -967,6 +967,7 @@ if __name__ == "__main__":
     script_run(
         sudo=True,
         script=script_install_docker(
+            openstudiolandscapes_repo_dir=OPENSTUDIOLANDSCAPES_DIR,
             docker_user=getuser(),
         ),
     )
