@@ -309,6 +309,7 @@ def script_install_python(
 
 
 def script_install_docker(
+    openstudiolandscapes_repo_dir: pathlib.Path,
     docker_user: str,
     edit_docker_daemon_json: bool = True,
     url_harbor: str = URL_HARBOR,
@@ -408,7 +409,12 @@ def script_install_docker(
             [
                 "\n",
                 "sudo systemctl daemon-reload\n",
+                # Todo
+                #  - [ ] This step causes the Harbor issues:
                 "sudo systemctl restart docker\n",
+                "\n",
+                f"sudo rm -rf {pathlib.Path(openstudiolandscapes_repo_dir, '.landscapes', '.harbor', 'bin').as_posix()}/*"
+                f"sudo rm -rf {pathlib.Path(openstudiolandscapes_repo_dir, '.landscapes', '.harbor', 'data').as_posix()}/*"
             ]
         )
 
