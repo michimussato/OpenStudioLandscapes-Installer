@@ -35,6 +35,7 @@ SHELL_SCRIPTS_PREFIX = "ubuntu_2204__"
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
+    BROWN = '\033[43m'
     OKCYAN = '\033[96m'
     OKGREEN = '\033[92m'
     WARNING = '\033[93m'
@@ -69,7 +70,7 @@ def script_run(
     with open(script.as_posix(), "r") as f:
         lines = f.readlines()
         print(" COMMAND ".center(_get_terminal_size()[0], "-"))
-        print(f" {shlex.join(cmd)} ".center(_get_terminal_size()[0], " "))
+        print(bcolors.BROWN + f" {shlex.join(cmd)} ".center(_get_terminal_size()[0], " ") + bcolors.ENDC)
         print(" SCRIPT START ".center(_get_terminal_size()[0], "-"))
         lno = 0
         len_ = len(str(len(lines)))
