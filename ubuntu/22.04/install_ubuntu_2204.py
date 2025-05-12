@@ -670,6 +670,9 @@ def script_harbor_init(
                 "  \"public\": true\n",
                 "}'\n",
                 "\n",
+                # Todo:
+                #  - [ ] confirmation/error
+                #    like && success || error
                 # "sleep 10\n",
             ]
         )
@@ -694,6 +697,9 @@ def script_harbor_init(
                 "  -H 'X-Is-Resource-Name: false' \\\n",
                 f"  -H 'authorization: Basic {base64.b64encode(str(':'.join([username_harbor, password_harbor])).encode('utf-8')).decode('ascii')}'\n",
                 "\n",
+                # Todo:
+                #  - [ ] confirmation/error
+                #        like && success || error
                 # "sleep 10\n",
             ]
         )
