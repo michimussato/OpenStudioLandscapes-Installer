@@ -163,6 +163,9 @@ def script_clone_openstudiolandscapes(
 
     print(" CLONE OPENSTUDIOLANDSCAPES ".center(_get_terminal_size()[0], "#"))
 
+    if ssh_key_file.exists():
+        print("Existing SSH Key file found. You will be prompted whether to overwrite existing keys or not.")
+
     print(" ENTER EMAIL ".center(_get_terminal_size()[0], "="))
     email = input("Enter your email: ")
 
