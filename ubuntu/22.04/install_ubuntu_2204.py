@@ -935,6 +935,7 @@ def script_initial_checks(
                 f"    sudo usermod --append --groups docker \"{docker_user}\"\n",
                 #f"    {shutil.which('bash')} {add_user_to_group_docker(docker_user=docker_user).as_posix()}\n",
                 f"    echo \"Reboot now and re-run this scrip.\"\n",
+                f"    # Reboot Script:\n",
                 f"    {shutil.which('bash')} {script_reboot().as_posix()}\n",
                 f"    exit 1\n",
                 "fi\n",
