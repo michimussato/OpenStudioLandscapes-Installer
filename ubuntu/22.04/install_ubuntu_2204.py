@@ -308,6 +308,9 @@ def script_install_python(
                 "    sleep 5\n",
                 "done;\n",
                 "\n",
+                # Todo:
+                #  - [ ] while [ ! sudo apt-get upgrade -y ]; do
+                #        /tmp/ubuntu_2204__211gwqzp.sh: line 10: [: too many arguments
                 f"sudo apt-get install --no-install-recommends -y {' '.join(python_pkgs)}\n",
                 "\n",
                 "pushd \"$(mktemp -d)\" || exit\n",
@@ -555,6 +558,15 @@ def script_harbor_prepare(
 ) -> pathlib.Path:
 
     print(" INIT HARBOR ".center(_get_terminal_size()[0], "#"))
+
+    # Todo:
+    #  - [ ] docker: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Head "http://%2Fvar%2Frun%2Fdocker.sock/_ping": dial unix /var/run/docker.sock: connect: permission denied
+    #  - [ ] Bad return code
+    #        Run 'docker run --help' for more information
+    #        nox > Command /usr/bin/bash /home/user/git/repos/OpenStudioLandscapes/.landscapes/.harbor/bin/prepare failed with exit code 126
+    #        nox > Session harbor_prepare failed.
+    #        ------------------------------------------------------------ RETURN CODE -------------------------------------------------------------
+    #        Return Code = 0
 
     with tempfile.NamedTemporaryFile(
             delete=False,
@@ -807,21 +819,22 @@ def script_add_alias(
                 "\n",
                 "\n",
                 # Escape dots
-                f"sed -i -e '$asource $HOME/\.openstudiolandscapesrc' -e '/source $HOME\/\.openstudiolandscapesrc/d' {bashrc.as_posix()}\n",
+                # f"sed -i -e '$asource $HOME/\.openstudiolandscapesrc' -e '/source $HOME\/\.openstudiolandscapesrc/d' {bashrc.as_posix()}\n",
+                f"sed -i -e '$asource {openstudiolandscapes_repo_dir.as_posix()}' -e '/source {openstudiolandscapes_repo_dir.as_posix()}/d' {bashrc.as_posix()}\n",
             ]
         )
 
-        script.writelines(
-            [
-                f"cat > {openstudiolandscapesrc.as_posix()}<< EOF\n",
-                "# ~/.openstudiolandscapesrc\n",
-                f"alias openstudiolandscapes-up=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions harbor_up_detach dagster_postgres_up_detach dagster_postgres && deactivate && popd\"\n",
-                f"alias openstudiolandscapes-down=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions dagster_postgres_down harbor_down && deactivate && popd\"\n",
-                f"alias openstudiolandscapes=\"openstudiolandscapes-up; sleep 5 && openstudiolandscapes-down;\"\n",
-                "\n",
-                "EOF\n",
-            ]
-        )
+        # script.writelines(
+        #     [
+        #         f"cat > {openstudiolandscapesrc.as_posix()}<< EOF\n",
+        #         "# ~/.openstudiolandscapesrc\n",
+        #         f"alias openstudiolandscapes-up=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions harbor_up_detach dagster_postgres_up_detach dagster_postgres && deactivate && popd\"\n",
+        #         f"alias openstudiolandscapes-down=\"pushd {openstudiolandscapes_repo_dir.as_posix()} && source .venv/bin/activate && nox --sessions dagster_postgres_down harbor_down && deactivate && popd\"\n",
+        #         f"alias openstudiolandscapes=\"openstudiolandscapes-up; sleep 5 && openstudiolandscapes-down;\"\n",
+        #         "\n",
+        #         "EOF\n",
+        #     ]
+        # )
 
         script.writelines(
             [
@@ -853,6 +866,78 @@ def script_reboot() -> pathlib.Path:
                 "[[ \"$choice_reboot\" == [Yy]* ]] \\\n",
                 "    && sudo systemctl reboot \\\n",
                 "|| echo \"Ok, let's reboot later.\"\n",
+            ]
+        )
+
+        script.writelines(
+            [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
+        return pathlib.Path(script.name)
+
+
+def add_user_to_group_docker(
+    docker_user: str,
+) -> pathlib.Path:
+
+    print(" ADD USER TO GROUP DOCKER ".center(_get_terminal_size()[0], "#"))
+
+    with tempfile.NamedTemporaryFile(
+            delete=False,
+            encoding="utf-8",
+            prefix=SHELL_SCRIPTS_PREFIX,
+            suffix=".sh",
+            mode="x",
+    ) as script_create_group:
+        script_create_group.writelines(
+            [
+                "#!/bin/env bash\n",
+                "\n",
+                "\n",
+                "sudo groupadd --force docker\n",
+                f"sudo usermod --append --groups docker \"{docker_user}\"\n",
+            ]
+        )
+
+        script_create_group.writelines(
+            [
+                "\n",
+                "exit 0\n",
+            ]
+        )
+
+        return pathlib.Path(script_create_group.name)
+
+
+def check_user_in_group_docker(
+    docker_user: str,
+) -> pathlib.Path:
+
+    print(" CHECK USER IN GROUP DOCKER ".center(_get_terminal_size()[0], "#"))
+
+    with tempfile.NamedTemporaryFile(
+            delete=False,
+            encoding="utf-8",
+            prefix=SHELL_SCRIPTS_PREFIX,
+            suffix=".sh",
+            mode="x",
+    ) as script:
+        script.writelines(
+            [
+                "#!/bin/env bash\n",
+                "\n",
+                "\n",
+                "if ! groups $USER | grep -qw \"docker\"; then\n",
+                f"    {shutil.which('bash')} {add_user_to_group_docker(docker_user=docker_user).as_posix()}\n",
+                f"    echo \"Reboot now and re-run this scrip.\"\n",
+                f"    {shutil.which('bash')} {script_reboot().as_posix()}\n",
+                "else\n",
+                "    echo \"Looking good! Let's go...\"\n",
+                "fi\n",
+                "\n",
             ]
         )
 
@@ -928,6 +1013,13 @@ if __name__ == "__main__":
 
     script_run(
         sudo=False,
+        script=add_user_to_group_docker(
+            docker_user=getuser()
+        ),
+    )
+
+    script_run(
+        sudo=False,
         script=script_initial_checks(),
     )
 
@@ -946,7 +1038,7 @@ if __name__ == "__main__":
             print(f"ERROR: Directory {openstudiolandscapes_base.as_posix()} is not absolute (~ is allowed).")
             continue
         if not openstudiolandscapes_base.exists():
-            print(f"ERROR: Directory {openstudiolandscapes_base.as_posix()} does not exist. Create it first.")
+            print(f"ERROR: Directory {openstudiolandscapes_base.as_posix()} does not exist. Create it first or choose a different one.")
             continue
         if openstudiolandscapes_base.is_file():
             print(f"ERROR: Install Directory {openstudiolandscapes_base.as_posix()} is a file. Cannot continue.")
