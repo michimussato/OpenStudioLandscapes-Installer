@@ -879,37 +879,37 @@ def script_reboot() -> pathlib.Path:
         return pathlib.Path(script.name)
 
 
-def add_user_to_group_docker(
-    docker_user: str,
-) -> pathlib.Path:
-
-    print(" ADD USER TO GROUP DOCKER ".center(_get_terminal_size()[0], "#"))
-
-    with tempfile.NamedTemporaryFile(
-            delete=False,
-            encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
-            suffix=".sh",
-            mode="x",
-    ) as script:
-        script.writelines(
-            [
-                "#!/bin/env bash\n",
-                "\n",
-                "\n",
-                "sudo groupadd --force docker\n",
-                f"sudo usermod --append --groups docker \"{docker_user}\"\n",
-            ]
-        )
-
-        script.writelines(
-            [
-                "\n",
-                "exit 0\n",
-            ]
-        )
-
-        return pathlib.Path(script.name)
+# def add_user_to_group_docker(
+#     docker_user: str,
+# ) -> pathlib.Path:
+#
+#     print(" ADD USER TO GROUP DOCKER ".center(_get_terminal_size()[0], "#"))
+#
+#     with tempfile.NamedTemporaryFile(
+#             delete=False,
+#             encoding="utf-8",
+#             prefix=SHELL_SCRIPTS_PREFIX,
+#             suffix=".sh",
+#             mode="x",
+#     ) as script:
+#         script.writelines(
+#             [
+#                 "#!/bin/env bash\n",
+#                 "\n",
+#                 "\n",
+#                 "sudo groupadd --force docker\n",
+#                 f"sudo usermod --append --groups docker \"{docker_user}\"\n",
+#             ]
+#         )
+#
+#         script.writelines(
+#             [
+#                 "\n",
+#                 "exit 0\n",
+#             ]
+#         )
+#
+#         return pathlib.Path(script.name)
 
 
 def script_initial_checks(
@@ -931,7 +931,9 @@ def script_initial_checks(
                 "\n",
                 "\n",
                 "if ! groups $USER | grep -qw \"docker\"; then\n",
-                f"    {shutil.which('bash')} {add_user_to_group_docker(docker_user=docker_user).as_posix()}\n",
+                f"    sudo groupadd --force docker\n",
+                f"    sudo usermod --append --groups docker \"{docker_user}\"\n",
+                #f"    {shutil.which('bash')} {add_user_to_group_docker(docker_user=docker_user).as_posix()}\n",
                 f"    echo \"Reboot now and re-run this scrip.\"\n",
                 f"    {shutil.which('bash')} {script_reboot().as_posix()}\n",
                 f"    exit 1\n",
