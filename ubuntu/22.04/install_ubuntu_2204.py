@@ -953,7 +953,6 @@ def script_initial_checks(
                 "fi\n",
                 "\n",
                 "echo \"Looking good! Let's go...\"\n",
-                "fi\n",
                 "\n",
             ]
         )
