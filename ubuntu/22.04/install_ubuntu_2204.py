@@ -303,7 +303,7 @@ def script_install_python(
         script.writelines(
             [
                 # line 10: [: too many arguments
-                "while [ ! sudo apt-get upgrade -y ]; do\n",
+                "while ! sudo apt-get upgrade -y; do\n",
                 "    echo \"Update in progress in the background...\"\n",
                 "    sleep 5\n",
                 "done;\n",
