@@ -951,7 +951,9 @@ def add_user_to_group_docker(
 #         return pathlib.Path(script.name)
 
 
-def script_initial_checks() -> pathlib.Path:
+def script_initial_checks(
+     docker_user: str,
+) -> pathlib.Path:
 
     print(" INITIAL CHECKS ".center(_get_terminal_size()[0], "#"))
 
