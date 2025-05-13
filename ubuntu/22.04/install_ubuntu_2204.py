@@ -814,7 +814,7 @@ def script_init_pihole(
 def script_add_alias(
     openstudiolandscapes_repo_dir: pathlib.Path,
     bashrc: pathlib.Path = pathlib.Path("~/.bashrc").expanduser(),
-    openstudiolandscapesrc: pathlib.Path = pathlib.Path("~/.openstudiolandscapesrc").expanduser(),
+    # openstudiolandscapesrc: pathlib.Path = pathlib.Path("~/.openstudiolandscapesrc").expanduser(),
 ) -> pathlib.Path:
 
     print(" ADD ALIASES ".center(_get_terminal_size()[0], "#"))
@@ -833,7 +833,7 @@ def script_add_alias(
                 "\n",
                 # Escape dots
                 # f"sed -i -e '$asource $HOME/\.openstudiolandscapesrc' -e '/source $HOME\/\.openstudiolandscapesrc/d' {bashrc.as_posix()}\n",
-                f"sed -i -e '$asource {openstudiolandscapes_repo_dir.as_posix()}' -e '/source {openstudiolandscapes_repo_dir.as_posix()}/d' {bashrc.as_posix()}\n",
+                f"sed -i -e '$asource {openstudiolandscapes_repo_dir.as_posix()}/\.openstudiolandscapesrc' -e '/source {openstudiolandscapes_repo_dir.as_posix()}\/\.openstudiolandscapesrc/d' {bashrc.as_posix()}\n",
             ]
         )
 
