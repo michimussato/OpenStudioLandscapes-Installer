@@ -449,11 +449,13 @@ def script_install_docker(
                 "\n",
                 "sudo systemctl daemon-reload\n",
                 # Todo
-                #  - [ ] This step causes the Harbor issues:
+                #  - [x] This step causes the Harbor issues:
                 "sudo systemctl restart docker\n",
                 "\n",
+                # Todo
+                #  - [ ] And this is the *best* solution I could come up with so far:
                 f"sudo rm -rf {pathlib.Path(openstudiolandscapes_repo_dir, '.landscapes', '.harbor', 'bin').as_posix()}/*\n",
-                f"sudo rm -rf {pathlib.Path(openstudiolandscapes_repo_dir, '.landscapes', '.harbor', 'data').as_posix()}/*\n*",
+                f"sudo rm -rf {pathlib.Path(openstudiolandscapes_repo_dir, '.landscapes', '.harbor', 'data').as_posix()}/*\n",
             ]
         )
 
