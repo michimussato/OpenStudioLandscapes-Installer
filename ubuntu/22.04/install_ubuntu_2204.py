@@ -58,6 +58,8 @@ def script_run(
     script: pathlib.Path,
 ) -> int:
 
+    print(" BLOCK START ".center(_get_terminal_size()[0], "="))
+
     cmd = [
         shutil.which("bash"),
         script.as_posix(),
@@ -85,12 +87,15 @@ def script_run(
     # hence, subprocess.run got me close but is not the best solution
     # when it comes to user input like passwords or other
     # arbitrary data.
+    print(" SCRIPT EXECUTION START ".center(_get_terminal_size()[0], "-"))
     result = pty.spawn(cmd)
+    print(" SCRIPT EXECUTION END ".center(_get_terminal_size()[0], "-"))
     print(" RETURN CODE ".center(_get_terminal_size()[0], "-"))
     if result == 0:
         print(bcolors.OKGREEN + f"Return Code = {result}" + bcolors.ENDC)
     else:
         print(bcolors.FAIL + f"Return Code = {result}" + bcolors.ENDC)
+    print(" BLOCK END ".center(_get_terminal_size()[0], "="))
 
     return result
 
