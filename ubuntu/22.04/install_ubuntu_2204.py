@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # https://www.baeldung.com/linux/curl-fetched-script-arguments
 import base64
+import inspect
 import json
 import shlex
 import shutil
@@ -29,7 +30,7 @@ ADMIN_HARBOR: str = "admin"
 PASSWORD_HARBOR: str = "Harbor12345"
 
 
-SHELL_SCRIPTS_PREFIX = "ubuntu_2204__"
+SHELL_SCRIPTS_PREFIX = "ubuntu_2204"
 
 
 class bcolors:
@@ -105,7 +106,7 @@ def script_disable_unattended_upgrades() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -138,7 +139,7 @@ def script_prep() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -201,7 +202,7 @@ def script_clone_openstudiolandscapes(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -271,7 +272,7 @@ def script_install_python(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -359,7 +360,7 @@ def script_install_docker(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -486,7 +487,7 @@ def script_install_openstudiolandscapes(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -527,7 +528,7 @@ def script_etc_hosts() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -583,7 +584,7 @@ def script_harbor_prepare(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -618,7 +619,7 @@ def script_harbor_up(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -656,7 +657,7 @@ def script_harbor_init(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -747,7 +748,7 @@ def script_harbor_down(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -784,7 +785,7 @@ def script_init_pihole(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -821,7 +822,7 @@ def script_add_alias(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -865,7 +866,7 @@ def script_reboot() -> pathlib.Path:
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
@@ -900,7 +901,7 @@ def script_initial_checks(
     with tempfile.NamedTemporaryFile(
             delete=False,
             encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
+            prefix=f"{SHELL_SCRIPTS_PREFIX}__{inspect.currentframe().f_code.co_name}__",
             suffix=".sh",
             mode="x",
     ) as script:
