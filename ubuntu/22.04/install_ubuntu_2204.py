@@ -891,53 +891,14 @@ def add_user_to_group_docker(
             prefix=SHELL_SCRIPTS_PREFIX,
             suffix=".sh",
             mode="x",
-    ) as script_create_group:
-        script_create_group.writelines(
-            [
-                "#!/bin/env bash\n",
-                "\n",
-                "\n",
-                "sudo groupadd --force docker\n",
-                f"sudo usermod --append --groups docker \"{docker_user}\"\n",
-            ]
-        )
-
-        script_create_group.writelines(
-            [
-                "\n",
-                "exit 0\n",
-            ]
-        )
-
-        return pathlib.Path(script_create_group.name)
-
-
-def check_user_in_group_docker(
-    docker_user: str,
-) -> pathlib.Path:
-
-    print(" CHECK USER IN GROUP DOCKER ".center(_get_terminal_size()[0], "#"))
-
-    with tempfile.NamedTemporaryFile(
-            delete=False,
-            encoding="utf-8",
-            prefix=SHELL_SCRIPTS_PREFIX,
-            suffix=".sh",
-            mode="x",
     ) as script:
         script.writelines(
             [
                 "#!/bin/env bash\n",
                 "\n",
                 "\n",
-                "if ! groups $USER | grep -qw \"docker\"; then\n",
-                f"    {shutil.which('bash')} {add_user_to_group_docker(docker_user=docker_user).as_posix()}\n",
-                f"    echo \"Reboot now and re-run this scrip.\"\n",
-                f"    {shutil.which('bash')} {script_reboot().as_posix()}\n",
-                "else\n",
-                "    echo \"Looking good! Let's go...\"\n",
-                "fi\n",
-                "\n",
+                "sudo groupadd --force docker\n",
+                f"sudo usermod --append --groups docker \"{docker_user}\"\n",
             ]
         )
 
@@ -949,6 +910,45 @@ def check_user_in_group_docker(
         )
 
         return pathlib.Path(script.name)
+
+
+# def check_user_in_group_docker(
+#     docker_user: str,
+# ) -> pathlib.Path:
+#
+#     print(" CHECK USER IN GROUP DOCKER ".center(_get_terminal_size()[0], "#"))
+#
+#     with tempfile.NamedTemporaryFile(
+#             delete=False,
+#             encoding="utf-8",
+#             prefix=SHELL_SCRIPTS_PREFIX,
+#             suffix=".sh",
+#             mode="x",
+#     ) as script:
+#         script.writelines(
+#             [
+#                 "#!/bin/env bash\n",
+#                 "\n",
+#                 "\n",
+#                 "if ! groups $USER | grep -qw \"docker\"; then\n",
+#                 f"    {shutil.which('bash')} {add_user_to_group_docker(docker_user=docker_user).as_posix()}\n",
+#                 f"    echo \"Reboot now and re-run this scrip.\"\n",
+#                 f"    {shutil.which('bash')} {script_reboot().as_posix()}\n",
+#                 "else\n",
+#                 "    echo \"Looking good! Let's go...\"\n",
+#                 "fi\n",
+#                 "\n",
+#             ]
+#         )
+#
+#         script.writelines(
+#             [
+#                 "\n",
+#                 "exit 0\n",
+#             ]
+#         )
+#
+#         return pathlib.Path(script.name)
 
 
 def script_initial_checks() -> pathlib.Path:
@@ -967,7 +967,12 @@ def script_initial_checks() -> pathlib.Path:
                 "#!/bin/env bash\n",
                 "\n",
                 "\n",
-                "if docker ps | grep \"goharbor/\"; then\n",
+                "if ! groups $USER | grep -qw \"docker\"; then\n",
+                f"    {shutil.which('bash')} {add_user_to_group_docker(docker_user=docker_user).as_posix()}\n",
+                f"    echo \"Reboot now and re-run this scrip.\"\n",
+                f"    {shutil.which('bash')} {script_reboot().as_posix()}\n",
+                f"    exit 1\n",
+                "elif docker ps | grep \"goharbor/\"; then\n",
                 "    echo \"Docker Container Harbor is running!\"\n",
                 "    echo \"It is not advisable to perform this installation while Harbor is running.\"\n",
                 "    echo\n",
@@ -1011,16 +1016,18 @@ if __name__ == "__main__":
     print("".center(_get_terminal_size()[0], "#"))
     print(" OPENSTUDIOLANDSCAPES INSTALLER ".center(_get_terminal_size()[0], "#"))
 
-    script_run(
-        sudo=False,
-        script=add_user_to_group_docker(
-            docker_user=getuser()
-        ),
-    )
+    # script_run(
+    #     sudo=False,
+    #     script=add_user_to_group_docker(
+    #         docker_user=getuser()
+    #     ),
+    # )
 
     script_run(
         sudo=False,
-        script=script_initial_checks(),
+        script=script_initial_checks(
+            docker_user=getuser()
+        ),
     )
 
     print(" INSTALL DIRECTORY ".center(_get_terminal_size()[0], "#"))
